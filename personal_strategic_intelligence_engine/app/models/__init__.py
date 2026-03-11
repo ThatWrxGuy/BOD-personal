@@ -30,6 +30,7 @@ from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, A
 from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecisionProposal
 from app.models.detection import DetectedEvent
 from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
+from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
 
 __all__ = [
     "UserProfile",
@@ -99,4 +100,6 @@ __all__ = [
     "StrategicPlan",
     "PlanAction",
     "PlanOutcome",
+    "KnowledgeEntity",
+    "KnowledgeRelationship",
 ]
