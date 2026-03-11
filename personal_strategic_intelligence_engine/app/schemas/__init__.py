@@ -30,6 +30,13 @@ from app.schemas.reviews import (
     OutcomeReviewResponse,
     OutcomeReviewListResponse,
 )
+from app.schemas.signals import (
+    SignalBase,
+    SignalCreate,
+    SignalResponse,
+    SignalListResponse,
+    SignalSummaryResponse,
+)
 
 __all__ = [
     "ProfileBase",
@@ -55,4 +62,9 @@ __all__ = [
     "OutcomeReviewUpdate",
     "OutcomeReviewResponse",
     "OutcomeReviewListResponse",
+    "SignalBase",
+    "SignalCreate",
+    "SignalResponse",
+    "SignalListResponse",
+    "SignalSummaryResponse",
 ]

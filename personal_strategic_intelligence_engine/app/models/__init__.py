@@ -8,6 +8,7 @@ from app.models.decision_record import DecisionRecord
 from app.models.outcome_review import OutcomeReview
 from app.models.strategic_insight import StrategicInsight
 from app.models.agent_performance import AgentPerformance
+from app.models.strategic_signal import StrategicSignal, SignalCategory
 
 __all__ = [
     "UserProfile",
@@ -19,4 +20,6 @@ __all__ = [
     "OutcomeReview",
     "StrategicInsight",
     "AgentPerformance",
+    "StrategicSignal",
+    "SignalCategory",
 ]

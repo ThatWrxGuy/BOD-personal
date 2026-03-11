@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.core.logging import setup_logging, get_logger
-from app.api import profile, board, decisions, reviews, health
+from app.api import profile, board, decisions, reviews, health, signals
 from app.db.init_db import init_db, seed_agents
 
 # Setup logging
@@ -58,6 +58,7 @@ def create_app() -> FastAPI:
     app.include_router(board.router)
     app.include_router(decisions.router)
     app.include_router(reviews.router)
+    app.include_router(signals.router)
 
     return app
 

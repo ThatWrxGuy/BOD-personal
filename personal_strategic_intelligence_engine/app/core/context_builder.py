@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.memory.profile_memory import ProfileMemory
 from app.memory.meeting_memory import MeetingMemory
 from app.memory.decision_memory import DecisionMemory
+from app.services.signal_service import SignalService
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -20,12 +21,15 @@ class ContextBuilder:
         self.profile_memory = ProfileMemory(session)
         self.meeting_memory = MeetingMemory(session)
         self.decision_memory = DecisionMemory(session)
+        self.signal_service = SignalService(session)
 
     async def build_context(
         self,
         question: str,
         meeting_type: Optional[str] = None,
         include_recent: int = 5,
+        include_signals: bool = True,
+        signal_hours: int = 72,
     ) -> dict[str, Any]:
         """Build complete context for a board meeting."""
         context = {}
@@ -48,6 +52,11 @@ class ContextBuilder:
         if recent_decisions[0]:
             context["recent_decisions"] = recent_decisions[0]
 
+        # Get strategic signals
+        if include_signals:
+            signals_context = await self._build_signals_context(question, signal_hours)
+            context.update(signals_context)
+
         # Try to find related meetings by keyword extraction
         keywords = self._extract_keywords(question)
         if keywords:
@@ -67,6 +76,49 @@ class ContextBuilder:
             context["related_meetings"] = unique_related[:5]
 
         return context
+
+    async def _build_signals_context(
+        self,
+        question: str,
+        hours: int = 72,
+    ) -> dict[str, Any]:
+        """Build context from strategic signals."""
+        signals_context = {}
+
+        try:
+            # Get high urgency signals
+            high_urgency = await self.signal_service.get_high_urgency_signals(
+                threshold=7,
+                hours=hours,
+            )
+            signals_context["high_urgency_signals"] = high_urgency
+
+            # Get high strength signals
+            high_strength = await self.signal_service.get_high_strength_signals(
+                threshold=7.0,
+                hours=hours,
+            )
+            signals_context["high_strength_signals"] = high_strength
+
+            # Get all recent signals for meeting
+            signals_data = await self.signal_service.get_signals_for_meeting(
+                hours=hours,
+                high_urgency_only=False,
+                limit=30,
+            )
+            signals_context["recent_signals"] = signals_data["signals"]
+            signals_context["signals_by_category"] = signals_data["by_category"]
+            signals_context["signals_count"] = signals_data["count"]
+
+            # Get signal summary
+            signal_summary = await self.signal_service.get_signal_summary(hours=hours)
+            signals_context["signals_summary"] = signal_summary
+
+        except Exception as e:
+            logger.warning(f"Error building signals context: {e}")
+            signals_context["signals_error"] = str(e)
+
+        return signals_context
 
     def _extract_keywords(self, text: str) -> list[str]:
         """Simple keyword extraction from question."""
