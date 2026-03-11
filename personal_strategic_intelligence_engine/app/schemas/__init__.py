@@ -51,6 +51,16 @@ from app.schemas.governance import (
     ReviewResponse,
     DashboardResponse,
 )
+from app.schemas.intelligence import (
+    ForecastResponse,
+    ScenarioCreate,
+    ScenarioResponse,
+    RiskProjectionResponse,
+    GoalProbabilityResponse,
+    TrendResponse,
+    TrendsSummaryResponse,
+    IntelligenceDashboardResponse,
+)
 
 __all__ = [
     "ProfileBase",
@@ -93,4 +103,12 @@ __all__ = [
     "TriggerEventResponse",
     "ReviewResponse",
     "DashboardResponse",
+    "ForecastResponse",
+    "ScenarioCreate",
+    "ScenarioResponse",
+    "RiskProjectionResponse",
+    "GoalProbabilityResponse",
+    "TrendResponse",
+    "TrendsSummaryResponse",
+    "IntelligenceDashboardResponse",
 ]

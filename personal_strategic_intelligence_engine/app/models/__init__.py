@@ -14,6 +14,11 @@ from app.models.strategic_plan import StrategicPlan, PlanStatus
 from app.models.goal_progress import GoalProgress
 from app.models.board_schedule import BoardSchedule, MeetingType
 from app.models.trigger_event import TriggerEvent, TriggerType, TriggerSeverity
+from app.models.forecast_model import ForecastModel, ForecastType
+from app.models.scenario_simulation import ScenarioSimulation
+from app.models.risk_projection import RiskProjection, RiskCategory
+from app.models.goal_probability import GoalProbability
+from app.models.simulation_run import SimulationRun, SimulationEvent, AuditReport
 
 __all__ = [
     "UserProfile",
@@ -38,4 +43,13 @@ __all__ = [
     "TriggerEvent",
     "TriggerType",
     "TriggerSeverity",
+    "ForecastModel",
+    "ForecastType",
+    "ScenarioSimulation",
+    "RiskProjection",
+    "RiskCategory",
+    "GoalProbability",
+    "SimulationRun",
+    "SimulationEvent",
+    "AuditReport",
 ]
