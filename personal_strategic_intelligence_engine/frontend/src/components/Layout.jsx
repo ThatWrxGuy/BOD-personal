@@ -10,6 +10,7 @@ import {
   Activity,
   Play,
   MessageSquare,
+  BookOpen,
   Menu,
   X,
   Bell,
@@ -28,6 +29,7 @@ const navItems = [
   { path: '/decisions', label: 'Decisions', icon: CheckSquare },
   { path: '/debates', label: 'Debates', icon: MessageSquare },
   { path: '/execution', label: 'Execution', icon: Play },
+  { path: '/learning', label: 'Learning', icon: BookOpen },
   { path: '/system', label: 'System Health', icon: Activity },
 ];
 

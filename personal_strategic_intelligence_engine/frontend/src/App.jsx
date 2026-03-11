@@ -11,6 +11,7 @@ import Decisions from './pages/Decisions';
 import SystemHealth from './pages/SystemHealth';
 import Execution from './pages/Execution';
 import Debates from './pages/Debates';
+import Learning from './pages/Learning';
 import { useAppStore } from './services/store';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="decisions" element={<Decisions />} />
           <Route path="debates" element={<Debates />} />
           <Route path="execution" element={<Execution />} />
+          <Route path="learning" element={<Learning />} />
           <Route path="system" element={<SystemHealth />} />
         </Route>
       </Routes>

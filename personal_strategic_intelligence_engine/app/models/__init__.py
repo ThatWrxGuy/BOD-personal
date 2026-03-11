@@ -21,6 +21,7 @@ from app.models.goal_probability import GoalProbability
 from app.models.simulation_run import SimulationRun, SimulationEvent, AuditReport
 from app.models.execution_record import ExecutionRecord, ExecutionHistory, ConnectorStatus
 from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateHistory
+from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson, StrategicPattern
 
 __all__ = [
     "UserProfile",
@@ -61,4 +62,8 @@ __all__ = [
     "DebateArgument",
     "DebateVote",
     "DebateHistory",
+    "DecisionMemory",
+    "AgentScorecard",
+    "StrategicLesson",
+    "StrategicPattern",
 ]

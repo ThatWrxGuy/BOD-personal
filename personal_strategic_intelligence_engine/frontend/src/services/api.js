@@ -105,6 +105,18 @@ export const debateApi = {
   start: (data) => api.post('/debate/start', null, { params: data }),
 };
 
+// Learning API
+export const learningApi = {
+  memories: (limit) => api.get('/learning/memories', { params: { limit } }),
+  memory: (id) => api.get(`/learning/memories/${id}`),
+  lessons: (limit) => api.get('/learning/lessons', { params: { limit } }),
+  patterns: (limit) => api.get('/learning/patterns', { params: { limit } }),
+  scorecards: () => api.get('/learning/agents/scorecards'),
+  agentPerformance: (id) => api.get(`/learning/agents/${id}/performance`),
+  evaluate: (decisionId, outcome, delta) => api.post(`/learning/evaluate/${decisionId}`, null, { params: { actual_outcome: outcome, outcome_delta: delta } }),
+  record: (data) => api.post('/learning/record', null, { params: data }),
+};
+
 // Decisions API
 export const decisionsApi = {
   list: (params) => api.get('/decisions', { params }),
