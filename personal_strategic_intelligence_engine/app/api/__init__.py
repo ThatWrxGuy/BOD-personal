@@ -1,4 +1,4 @@
 """API routes package."""
-from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution
+from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate
 
-__all__ = ["profile", "board", "decisions", "reviews", "health", "signals", "governance", "intelligence", "simulation", "execution"]
+__all__ = ["profile", "board", "decisions", "reviews", "health", "signals", "governance", "intelligence", "simulation", "execution", "debate"]

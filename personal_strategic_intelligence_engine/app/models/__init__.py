@@ -20,6 +20,7 @@ from app.models.risk_projection import RiskProjection, RiskCategory
 from app.models.goal_probability import GoalProbability
 from app.models.simulation_run import SimulationRun, SimulationEvent, AuditReport
 from app.models.execution_record import ExecutionRecord, ExecutionHistory, ConnectorStatus
+from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateHistory
 
 __all__ = [
     "UserProfile",
@@ -56,4 +57,8 @@ __all__ = [
     "ExecutionRecord",
     "ExecutionHistory",
     "ConnectorStatus",
+    "DebateSession",
+    "DebateArgument",
+    "DebateVote",
+    "DebateHistory",
 ]

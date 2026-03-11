@@ -96,6 +96,15 @@ export const executionApi = {
   connectors: () => api.get('/execution/connectors/status'),
 };
 
+// Debate API
+export const debateApi = {
+  sessions: () => api.get('/debate/sessions'),
+  session: (id) => api.get(`/debate/sessions/${id}`),
+  arguments: (id) => api.get(`/debate/sessions/${id}/arguments`),
+  votes: (id) => api.get(`/debate/sessions/${id}/votes`),
+  start: (data) => api.post('/debate/start', null, { params: data }),
+};
+
 // Decisions API
 export const decisionsApi = {
   list: (params) => api.get('/decisions', { params }),
