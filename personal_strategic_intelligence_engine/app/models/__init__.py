@@ -26,6 +26,7 @@ from app.models.kernel import SystemStateSnapshot, StrategicPriority, PolicyRule
 from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStateTransition
 from app.models.identity import User, Role, Permission, AccessAuditLog
 from app.models.security import ConnectorAuditLog, ConnectorConfiguration
+from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, AlertEvent
 
 __all__ = [
     "UserProfile",
@@ -85,4 +86,7 @@ __all__ = [
     "AccessAuditLog",
     "ConnectorAuditLog",
     "ConnectorConfiguration",
+    "SystemMetricSnapshot",
+    "HealthStatusRecord",
+    "AlertEvent",
 ]
