@@ -22,6 +22,7 @@ from app.models.simulation_run import SimulationRun, SimulationEvent, AuditRepor
 from app.models.execution_record import ExecutionRecord, ExecutionHistory, ConnectorStatus
 from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateHistory
 from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson, StrategicPattern
+from app.models.kernel import SystemStateSnapshot, StrategicPriority, PolicyRule, DecisionUtilityScore, StrategicDoctrine, KernelCycleLog
 
 __all__ = [
     "UserProfile",
@@ -66,4 +67,10 @@ __all__ = [
     "AgentScorecard",
     "StrategicLesson",
     "StrategicPattern",
+    "SystemStateSnapshot",
+    "StrategicPriority",
+    "PolicyRule",
+    "DecisionUtilityScore",
+    "StrategicDoctrine",
+    "KernelCycleLog",
 ]

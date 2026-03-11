@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.core.config_validation import validate_and_raise
 from app.core.config_check import get_readiness_report
 from app.core.logging import setup_logging, get_logger
-from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning
+from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel
 from app.db.init_db import init_db, seed_agents
 
 # Setup logging
@@ -87,6 +87,7 @@ def create_app() -> FastAPI:
     app.include_router(execution.router)
     app.include_router(debate.router)
     app.include_router(learning.router)
+    app.include_router(kernel.router)
 
     return app
 
