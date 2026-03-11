@@ -161,3 +161,109 @@ async def get_events(
             for e in events
         ]
     }
+
+
+# Strategic Simulation Engine endpoints (V3-007)
+
+@router.get("/strategic/runs")
+async def list_strategic_simulations(
+    status: Optional[str] = Query(None),
+    limit: int = Query(20, ge=1, le=100),
+    session: AsyncSession = Depends(get_db),
+):
+    """List strategic simulation runs."""
+    from app.simulation.simulation_engine import get_simulation_engine
+    
+    engine = await get_simulation_engine(session)
+    simulations = await engine.get_simulations(status, limit)
+    
+    return {
+        "simulations": [
+            {
+                "id": str(s.id),
+                "decision_type": s.decision_type,
+                "decision_description": s.decision_description,
+                "time_horizon_days": s.time_horizon_days,
+                "domain": s.domain,
+                "status": s.status,
+                "scenarios_generated": s.scenarios_generated,
+                "recommended_scenario": s.recommended_scenario,
+                "overall_risk_level": s.overall_risk_level,
+            }
+            for s in simulations
+        ]
+    }
+
+
+@router.post("/strategic/run")
+async def run_strategic_simulation(
+    decision_type: str = Query(..., description="Decision type: investment, spending, workload, expense, goal_timeline"),
+    decision_description: Optional[str] = Query(None),
+    decision_params: Optional[dict] = Query(None),
+    time_horizon_days: int = Query(90, ge=1, le=1825),
+    domain: str = Query("financial"),
+    session: AsyncSession = Depends(get_db),
+):
+    """Run a strategic simulation."""
+    from app.simulation.simulation_engine import get_simulation_engine
+    
+    engine = await get_simulation_engine(session)
+    
+    try:
+        simulation = await engine.run_simulation(
+            decision_type=decision_type,
+            decision_description=decision_description,
+            decision_params=decision_params,
+            time_horizon_days=time_horizon_days,
+            domain=domain,
+        )
+        
+        return {
+            "id": str(simulation.id),
+            "decision_type": simulation.decision_type,
+            "status": simulation.status,
+            "message": "Simulation started",
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/strategic/runs/{simulation_id}")
+async def get_strategic_simulation(
+    simulation_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+):
+    """Get strategic simulation details."""
+    from app.simulation.simulation_engine import get_simulation_engine
+    
+    engine = await get_simulation_engine(session)
+    simulation = await engine.get_simulation(simulation_id)
+    
+    if not simulation:
+        raise HTTPException(status_code=404, detail="Simulation not found")
+    
+    scenarios = await engine.get_simulation_scenarios(simulation_id)
+    
+    return {
+        "id": str(simulation.id),
+        "decision_type": simulation.decision_type,
+        "decision_description": simulation.decision_description,
+        "time_horizon_days": simulation.time_horizon_days,
+        "domain": simulation.domain,
+        "status": simulation.status,
+        "scenarios_generated": simulation.scenarios_generated,
+        "recommended_scenario": simulation.recommended_scenario,
+        "overall_risk_level": simulation.overall_risk_level,
+        "scenarios": [
+            {
+                "id": str(s.id),
+                "scenario_name": s.scenario_name,
+                "scenario_type": s.scenario_type,
+                "projected_value": s.projected_value,
+                "confidence_score": s.confidence_score,
+                "risk_score": s.risk_score,
+            }
+            for s in scenarios
+        ],
+    }
