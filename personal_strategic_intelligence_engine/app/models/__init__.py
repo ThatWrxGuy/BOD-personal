@@ -23,6 +23,7 @@ from app.models.execution_record import ExecutionRecord, ExecutionHistory, Conne
 from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateHistory
 from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson, StrategicPattern
 from app.models.kernel import SystemStateSnapshot, StrategicPriority, PolicyRule, DecisionUtilityScore, StrategicDoctrine, KernelCycleLog
+from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStateTransition
 
 __all__ = [
     "UserProfile",
@@ -73,4 +74,7 @@ __all__ = [
     "DecisionUtilityScore",
     "StrategicDoctrine",
     "KernelCycleLog",
+    "EventRecord",
+    "WorkflowInstance",
+    "WorkflowStateTransition",
 ]
