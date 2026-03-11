@@ -29,6 +29,7 @@ from app.models.security import ConnectorAuditLog, ConnectorConfiguration
 from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, AlertEvent
 from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecisionProposal
 from app.models.detection import DetectedEvent
+from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
 
 __all__ = [
     "UserProfile",
@@ -95,4 +96,7 @@ __all__ = [
     "StrategicInsight",
     "ReviewDecisionProposal",
     "DetectedEvent",
+    "StrategicPlan",
+    "PlanAction",
+    "PlanOutcome",
 ]
