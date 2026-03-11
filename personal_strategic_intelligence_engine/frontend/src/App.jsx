@@ -1,0 +1,46 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
+import Signals from './pages/Signals';
+import Governance from './pages/Governance';
+import Goals from './pages/Goals';
+import Intelligence from './pages/Intelligence';
+import Simulations from './pages/Simulations';
+import Decisions from './pages/Decisions';
+import SystemHealth from './pages/SystemHealth';
+import { useAppStore } from './services/store';
+
+function App() {
+  const { refreshAll, fetchHealth } = useAppStore();
+
+  useEffect(() => {
+    // Initial data load
+    refreshAll();
+    
+    // Poll for health updates every 30 seconds
+    const healthInterval = setInterval(fetchHealth, 30000);
+    
+    return () => clearInterval(healthInterval);
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="signals" element={<Signals />} />
+          <Route path="governance" element={<Governance />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="intelligence" element={<Intelligence />} />
+          <Route path="simulations" element={<Simulations />} />
+          <Route path="decisions" element={<Decisions />} />
+          <Route path="system" element={<SystemHealth />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
