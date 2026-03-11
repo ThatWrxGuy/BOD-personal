@@ -32,6 +32,7 @@ from app.models.detection import DetectedEvent
 from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
 from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
 from app.models.research import ResearchTask, ResearchReport, ResearchSourceResult
+from app.models.finance_ops import Bill, ExpenseRecord, SubscriptionRecord, CashFlowForecast, LiquidityAlert, AccountBalance
 
 __all__ = [
     "UserProfile",
@@ -106,4 +107,10 @@ __all__ = [
     "ResearchTask",
     "ResearchReport",
     "ResearchSourceResult",
+    "Bill",
+    "ExpenseRecord",
+    "SubscriptionRecord",
+    "CashFlowForecast",
+    "LiquidityAlert",
+    "AccountBalance",
 ]
