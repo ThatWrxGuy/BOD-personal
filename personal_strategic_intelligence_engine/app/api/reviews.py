@@ -16,7 +16,7 @@ from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-router = APIRouter(prefix="/reviews", tags=["reviews"])
+router = APIRouter(prefix="/strategic-reviews", tags=["strategic-reviews"])
 
 
 @router.post("", response_model=OutcomeReviewResponse, status_code=status.HTTP_201_CREATED)

@@ -27,6 +27,7 @@ from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStat
 from app.models.identity import User, Role, Permission, AccessAuditLog
 from app.models.security import ConnectorAuditLog, ConnectorConfiguration
 from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, AlertEvent
+from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecisionProposal
 
 __all__ = [
     "UserProfile",
@@ -89,4 +90,7 @@ __all__ = [
     "SystemMetricSnapshot",
     "HealthStatusRecord",
     "AlertEvent",
+    "StrategicReview",
+    "StrategicInsight",
+    "ReviewDecisionProposal",
 ]
