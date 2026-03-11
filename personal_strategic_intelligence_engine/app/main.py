@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.core.config_validation import validate_and_raise
 from app.core.config_check import get_readiness_report
 from app.core.logging import setup_logging, get_logger
-from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel, orchestration, identity, security, observability, strategic_reviews
+from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel, orchestration, identity, security, observability, strategic_reviews, detection
 from app.identity.auth_middleware import AuthMiddleware
 from app.db.init_db import init_db, seed_agents
 
@@ -121,6 +121,7 @@ def create_app() -> FastAPI:
     app.include_router(security.router)
     app.include_router(observability.router)
     app.include_router(strategic_reviews.router)
+    app.include_router(detection.router)
 
     return app
 

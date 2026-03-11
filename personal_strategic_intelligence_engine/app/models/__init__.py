@@ -28,6 +28,7 @@ from app.models.identity import User, Role, Permission, AccessAuditLog
 from app.models.security import ConnectorAuditLog, ConnectorConfiguration
 from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, AlertEvent
 from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecisionProposal
+from app.models.detection import DetectedEvent
 
 __all__ = [
     "UserProfile",
@@ -93,4 +94,5 @@ __all__ = [
     "StrategicReview",
     "StrategicInsight",
     "ReviewDecisionProposal",
+    "DetectedEvent",
 ]
