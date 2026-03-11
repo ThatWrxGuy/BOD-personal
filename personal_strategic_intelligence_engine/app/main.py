@@ -8,7 +8,8 @@ from app.core.config import get_settings
 from app.core.config_validation import validate_and_raise
 from app.core.config_check import get_readiness_report
 from app.core.logging import setup_logging, get_logger
-from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel, orchestration
+from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel, orchestration, identity
+from app.identity.auth_middleware import AuthMiddleware
 from app.db.init_db import init_db, seed_agents
 
 # Setup logging
@@ -82,6 +83,10 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # Add auth middleware (if auth is enabled)
+    if settings.enable_auth:
+        app.add_middleware(AuthMiddleware)
+
     # CORS - Environment-driven, never wildcard in production
     cors_origins = settings.cors_origins
     if settings.is_production and ("*" in cors_origins or not cors_origins):
@@ -110,6 +115,9 @@ def create_app() -> FastAPI:
     app.include_router(learning.router)
     app.include_router(kernel.router)
     app.include_router(orchestration.router)
+    app.include_router(identity.router)
+    app.include_router(identity.user_router)
+    app.include_router(identity.admin_router)
 
     return app
 

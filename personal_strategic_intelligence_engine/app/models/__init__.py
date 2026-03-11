@@ -24,6 +24,7 @@ from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateH
 from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson, StrategicPattern
 from app.models.kernel import SystemStateSnapshot, StrategicPriority, PolicyRule, DecisionUtilityScore, StrategicDoctrine, KernelCycleLog
 from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStateTransition
+from app.models.identity import User, Role, Permission, AccessAuditLog
 
 __all__ = [
     "UserProfile",
@@ -77,4 +78,8 @@ __all__ = [
     "EventRecord",
     "WorkflowInstance",
     "WorkflowStateTransition",
+    "User",
+    "Role",
+    "Permission",
+    "AccessAuditLog",
 ]
