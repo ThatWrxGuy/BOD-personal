@@ -25,6 +25,7 @@ from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson,
 from app.models.kernel import SystemStateSnapshot, StrategicPriority, PolicyRule, DecisionUtilityScore, StrategicDoctrine, KernelCycleLog
 from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStateTransition
 from app.models.identity import User, Role, Permission, AccessAuditLog
+from app.models.security import ConnectorAuditLog, ConnectorConfiguration
 
 __all__ = [
     "UserProfile",
@@ -82,4 +83,6 @@ __all__ = [
     "Role",
     "Permission",
     "AccessAuditLog",
+    "ConnectorAuditLog",
+    "ConnectorConfiguration",
 ]
