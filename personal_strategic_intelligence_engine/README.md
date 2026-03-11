@@ -43,8 +43,9 @@ The Personal Strategic Intelligence Engine (PSIE) is a sophisticated system desi
 
 - Python 3.11+
 - PostgreSQL database
+- Docker (optional, for local services)
 
-### Setup
+### Option 1: Docker (Recommended)
 
 1. Clone the repository:
 ```bash
@@ -52,45 +53,93 @@ git clone <repository-url>
 cd personal_strategic_intelligence_engine
 ```
 
-2. Create and activate a virtual environment:
+2. Start local services (PostgreSQL, Redis):
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+docker-compose up -d
 ```
 
-3. Install dependencies:
+3. Copy environment file and configure:
 ```bash
+cp .env.example .env
+# Edit .env with your settings
+```
+
+4. Install dependencies and run:
+```bash
+pip install -r requirements.txt
+python scripts/check_config.py
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Option 2: Local Development
+
+1. Clone and setup:
+```bash
+git clone <repository-url>
+cd personal_strategic_intelligence_engine
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Copy the environment file:
+2. Configure:
 ```bash
 cp .env.example .env
+# Edit .env with your settings
 ```
 
-5. Configure your environment variables in `.env`:
-```env
-DATABASE_URL="postgresql+asyncpg://user:password@localhost:5432/strategic_board"
-OPENAI_API_KEY="your-openai-api-key"
-# Or use Anthropic:
-LLM_PROVIDER="anthropic"
-ANTHROPIC_API_KEY="your-anthropic-api-key"
-```
-
-6. Initialize the database:
+3. Run config check:
 ```bash
-python -m app.db.init_db
+python scripts/check_config.py
 ```
 
-7. Start the API server:
+4. Start server:
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### Safety First
+
+PSIE defaults to **safe operation**:
+- Execution is **disabled** by default
+- Manual approval is **required** for all actions
+- All connectors are **disabled** by default
+- Kill switch is **enabled**
+
+See [Configuration Guide](#configuration) for details on enabling features.
+
+### Configuration
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+# Required
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/db
+
+# LLM Provider (at least one required)
+OPENAI_API_KEY=sk-...
+# OR
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Production requires explicit CORS
+CORS_ORIGINS=https://your-domain.com
+APP_ENV=production
+```
+
+Run `python scripts/check_config.py` to validate your configuration.
+
 ### Running Tests
 
 ```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests
 pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=app --cov-report=html
 ```
 
 ## API Endpoints

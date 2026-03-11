@@ -241,24 +241,37 @@ class ConfigChecker:
     
     def _check_safety(self) -> Dict[str, Any]:
         """Check overall safety posture."""
+        settings = get_settings()
+        
         issues = []
         
-        if self.settings.system_execution_enabled:
-            if not self.settings.enable_kill_switch:
+        if settings.system_execution_enabled:
+            if not settings.enable_kill_switch:
                 issues.append("Kill switch is disabled")
-            if not self.settings.manual_approval_required:
+            if not settings.manual_approval_required:
                 issues.append("Manual approval is not required")
-            if self.settings.risk_score_threshold > 0.9:
+            if settings.risk_score_threshold > 0.9:
                 issues.append("Risk score threshold is too high")
         
-        if self.settings.secret_key == "changeme-insecure-default-key":
+        if settings.secret_key == "changeme-insecure-default-key":
             issues.append("Default secret key in use")
+        
+        # Security checks
+        security_issues = []
+        
+        if settings.is_production:
+            if not settings.enable_auth:
+                security_issues.append("Authentication is disabled in production")
+            if not settings.cors_origins or "*" in settings.cors_origins:
+                security_issues.append("CORS not properly configured for production")
         
         return {
             "status": ReadinessStatus.UNSAFE if issues else ReadinessStatus.READY,
             "issues": issues,
-            "execution_enabled": self.settings.system_execution_enabled,
-            "auth_enabled": self.settings.enable_auth,
+            "execution_enabled": settings.system_execution_enabled,
+            "auth_enabled": settings.enable_auth,
+            "security_issues": security_issues,
+            "is_production": settings.is_production,
         }
 
 

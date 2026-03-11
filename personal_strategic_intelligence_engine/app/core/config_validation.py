@@ -185,3 +185,13 @@ def validate_and_raise() -> None:
     """Validate configuration and raise on errors."""
     validator = ConfigValidator()
     validator.raise_on_errors()
+    
+    # Additional production checks
+    settings = get_settings()
+    
+    if settings.is_production:
+        # Ensure CORS is configured
+        if not settings.cors_origins or "*" in settings.cors_origins:
+            raise ConfigValidationError(
+                "CORS origins must be explicitly configured in production"
+            )

@@ -18,14 +18,31 @@ logger = get_logger(__name__)
 
 def validate_configuration() -> None:
     """Validate configuration at startup."""
+    settings = get_settings()
+    
+    # Production security checks
+    if settings.is_production:
+        # Check secret key
+        if settings.secret_key == "changeme-insecure-default-key":
+            raise ValueError("SECRET_KEY must be changed from default in production")
+        
+        # Check auth is enabled
+        if not settings.enable_auth:
+            raise ValueError("ENABLE_AUTH must be true in production")
+        
+        # Check execution safety
+        if settings.system_execution_enabled and not settings.enable_kill_switch:
+            raise ValueError("ENABLE_KILL_SWITCH must be true when execution is enabled")
+        
+        if settings.system_execution_enabled and not settings.manual_approval_required:
+            raise ValueError("MANUAL_APPROVAL_REQUIRED must be true when execution is enabled")
+    
     try:
         validate_and_raise()
         logger.info("Configuration validation passed")
     except Exception as e:
         logger.error(f"Configuration validation failed: {e}")
-        # In development, continue anyway with warnings
-        settings = get_settings()
-        if settings.app_env == "production":
+        if settings.is_production:
             raise
 
 
@@ -65,10 +82,14 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS middleware
+    # CORS - Environment-driven, never wildcard in production
+    cors_origins = settings.cors_origins
+    if settings.is_production and ("*" in cors_origins or not cors_origins):
+        raise ValueError("CORS origins must be explicitly configured in production")
+    
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=cors_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
