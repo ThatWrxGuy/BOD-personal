@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
+from app.core.config_validation import validate_and_raise
+from app.core.config_check import get_readiness_report
 from app.core.logging import setup_logging, get_logger
 from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning
 from app.db.init_db import init_db, seed_agents
@@ -14,11 +16,31 @@ setup_logging()
 logger = get_logger(__name__)
 
 
+def validate_configuration() -> None:
+    """Validate configuration at startup."""
+    try:
+        validate_and_raise()
+        logger.info("Configuration validation passed")
+    except Exception as e:
+        logger.error(f"Configuration validation failed: {e}")
+        # In development, continue anyway with warnings
+        settings = get_settings()
+        if settings.app_env == "production":
+            raise
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler."""
     settings = get_settings()
     logger.info(f"Starting {settings.app_name} v{settings.app_version}")
+    
+    # Validate configuration
+    validate_configuration()
+    
+    # Log readiness report
+    report = get_readiness_report()
+    logger.info(f"System readiness: {report['overall']['status']}")
     
     # Initialize database
     try:
