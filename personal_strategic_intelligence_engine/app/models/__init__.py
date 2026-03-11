@@ -9,6 +9,11 @@ from app.models.outcome_review import OutcomeReview
 from app.models.strategic_insight import StrategicInsight
 from app.models.agent_performance import AgentPerformance
 from app.models.strategic_signal import StrategicSignal, SignalCategory
+from app.models.strategic_goal import StrategicGoal, GoalCategory, GoalStatus
+from app.models.strategic_plan import StrategicPlan, PlanStatus
+from app.models.goal_progress import GoalProgress
+from app.models.board_schedule import BoardSchedule, MeetingType
+from app.models.trigger_event import TriggerEvent, TriggerType, TriggerSeverity
 
 __all__ = [
     "UserProfile",
@@ -22,4 +27,15 @@ __all__ = [
     "AgentPerformance",
     "StrategicSignal",
     "SignalCategory",
+    "StrategicGoal",
+    "GoalCategory",
+    "GoalStatus",
+    "StrategicPlan",
+    "PlanStatus",
+    "GoalProgress",
+    "BoardSchedule",
+    "MeetingType",
+    "TriggerEvent",
+    "TriggerType",
+    "TriggerSeverity",
 ]

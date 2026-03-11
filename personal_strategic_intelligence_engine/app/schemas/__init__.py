@@ -37,6 +37,20 @@ from app.schemas.signals import (
     SignalListResponse,
     SignalSummaryResponse,
 )
+from app.schemas.governance import (
+    GoalCreate,
+    GoalUpdate,
+    GoalResponse,
+    GoalProgressCreate,
+    GoalProgressResponse,
+    PlanCreate,
+    PlanUpdate,
+    PlanResponse,
+    ScheduleResponse,
+    TriggerEventResponse,
+    ReviewResponse,
+    DashboardResponse,
+)
 
 __all__ = [
     "ProfileBase",
@@ -67,4 +81,16 @@ __all__ = [
     "SignalResponse",
     "SignalListResponse",
     "SignalSummaryResponse",
+    "GoalCreate",
+    "GoalUpdate",
+    "GoalResponse",
+    "GoalProgressCreate",
+    "GoalProgressResponse",
+    "PlanCreate",
+    "PlanUpdate",
+    "PlanResponse",
+    "ScheduleResponse",
+    "TriggerEventResponse",
+    "ReviewResponse",
+    "DashboardResponse",
 ]
