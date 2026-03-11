@@ -31,6 +31,7 @@ from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecision
 from app.models.detection import DetectedEvent
 from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
 from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
+from app.models.research import ResearchTask, ResearchReport, ResearchSourceResult
 
 __all__ = [
     "UserProfile",
@@ -102,4 +103,7 @@ __all__ = [
     "PlanOutcome",
     "KnowledgeEntity",
     "KnowledgeRelationship",
+    "ResearchTask",
+    "ResearchReport",
+    "ResearchSourceResult",
 ]
