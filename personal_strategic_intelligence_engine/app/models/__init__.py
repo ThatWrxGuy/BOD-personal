@@ -19,6 +19,7 @@ from app.models.scenario_simulation import ScenarioSimulation
 from app.models.risk_projection import RiskProjection, RiskCategory
 from app.models.goal_probability import GoalProbability
 from app.models.simulation_run import SimulationRun, SimulationEvent, AuditReport
+from app.models.execution_record import ExecutionRecord, ExecutionHistory, ConnectorStatus
 
 __all__ = [
     "UserProfile",
@@ -52,4 +53,7 @@ __all__ = [
     "SimulationRun",
     "SimulationEvent",
     "AuditReport",
+    "ExecutionRecord",
+    "ExecutionHistory",
+    "ConnectorStatus",
 ]

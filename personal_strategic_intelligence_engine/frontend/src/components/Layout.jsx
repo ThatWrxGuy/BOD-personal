@@ -8,6 +8,7 @@ import {
   FlaskConical, 
   CheckSquare, 
   Activity,
+  Play,
   Menu,
   X,
   Bell,
@@ -24,6 +25,7 @@ const navItems = [
   { path: '/intelligence', label: 'Intelligence', icon: Brain },
   { path: '/simulations', label: 'Simulations', icon: FlaskConical },
   { path: '/decisions', label: 'Decisions', icon: CheckSquare },
+  { path: '/execution', label: 'Execution', icon: Play },
   { path: '/system', label: 'System Health', icon: Activity },
 ];
 

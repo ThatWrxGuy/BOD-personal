@@ -83,6 +83,19 @@ export const simulationApi = {
   events: (id) => api.get(`/simulation/runs/${id}/events`),
 };
 
+// Execution API
+export const executionApi = {
+  pending: () => api.get('/execution/pending'),
+  executing: () => api.get('/execution/executing'),
+  history: (limit) => api.get('/execution/history', { params: { limit } }),
+  create: (data) => api.post('/execution/create', null, { params: data }),
+  get: (id) => api.get(`/execution/${id}`),
+  approve: (id) => api.post(`/execution/${id}/approve`),
+  reject: (id, reason) => api.post(`/execution/${id}/reject`, null, { params: { reason } }),
+  run: (id) => api.post(`/execution/${id}/run`),
+  connectors: () => api.get('/execution/connectors/status'),
+};
+
 // Decisions API
 export const decisionsApi = {
   list: (params) => api.get('/decisions', { params }),

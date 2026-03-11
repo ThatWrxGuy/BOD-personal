@@ -9,6 +9,7 @@ import Intelligence from './pages/Intelligence';
 import Simulations from './pages/Simulations';
 import Decisions from './pages/Decisions';
 import SystemHealth from './pages/SystemHealth';
+import Execution from './pages/Execution';
 import { useAppStore } from './services/store';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="intelligence" element={<Intelligence />} />
           <Route path="simulations" element={<Simulations />} />
           <Route path="decisions" element={<Decisions />} />
+          <Route path="execution" element={<Execution />} />
           <Route path="system" element={<SystemHealth />} />
         </Route>
       </Routes>
