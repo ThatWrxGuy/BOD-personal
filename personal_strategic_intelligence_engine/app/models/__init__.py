@@ -34,6 +34,7 @@ from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
 from app.models.research import ResearchTask, ResearchReport, ResearchSourceResult
 from app.models.finance_ops import Bill, ExpenseRecord, SubscriptionRecord, CashFlowForecast, LiquidityAlert, AccountBalance
 from app.models.simulation import SimulationRun, SimulationScenario, SimulationResult
+from app.models.chat import ChatSession, ChatMessage
 
 __all__ = [
     "UserProfile",
@@ -117,4 +118,6 @@ __all__ = [
     "SimulationRun",
     "SimulationScenario",
     "SimulationResult",
+    "ChatSession",
+    "ChatMessage",
 ]
