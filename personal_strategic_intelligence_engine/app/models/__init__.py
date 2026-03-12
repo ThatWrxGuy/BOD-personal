@@ -37,6 +37,7 @@ from app.models.simulation import SimulationRun, SimulationScenario, SimulationR
 from app.models.chat import ChatSession, ChatMessage
 from app.models.rhythm import DailyPlan, WeeklyPlan, Habit, HabitCompletion, FocusBlock, EnergyPattern
 from app.models.autonomy import StrategyLoopCycle, LoopPolicy
+from app.models.executive import ExecutiveCommandLog, OverrideLog, AutonomyOverride
 
 __all__ = [
     "UserProfile",
@@ -130,4 +131,7 @@ __all__ = [
     "EnergyPattern",
     "StrategyLoopCycle",
     "LoopPolicy",
+    "ExecutiveCommandLog",
+    "OverrideLog",
+    "AutonomyOverride",
 ]
