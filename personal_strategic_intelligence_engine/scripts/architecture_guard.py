@@ -6,11 +6,29 @@ This script checks for:
 - Forbidden dependencies
 - Duplicate subsystem creation
 - Legacy simulation imports in active code
+- Versioned/temporary module naming violations
 """
 import os
+import re
 import sys
 from pathlib import Path
 from typing import List, Set, Dict, Tuple
+
+
+# Version/temporary naming patterns to detect
+VERSION_PATTERNS = [
+    r"_[vV]\d+",           # _v2, _V2, _v3, etc.
+    r"_new\b",              # _new
+    r"_experimental\b",     # _experimental
+    r"_legacy\b",           # _legacy
+    r"_old\b",              # _old
+    r"_temp\b",             # _temp
+    r"_refactor\b",         # _refactor
+    r"_fixed\b",            # _fixed
+    r"_better\b",           # _better
+]
+
+VERSION_PATTERN = re.compile("|".join(VERSION_PATTERNS))
 
 
 # Define architectural layers (from low to high)
@@ -234,6 +252,10 @@ def run_architecture_check() -> Dict[str, any]:
         violations = check_imports(str(py_file))
         all_violations.extend(violations)
     
+    # Check versioned/temporary file names
+    versioned_violations = check_versioned_files("app")
+    all_violations.extend(versioned_violations)
+    
     # Generate report
     report = {
         "total_violations": len(all_violations),
@@ -266,10 +288,12 @@ def print_report(report: Dict) -> None:
             print(f"  {dup.get('message', '')}")
     
     if report['violations']:
-        print("\n--- IMPORT VIOLATIONS ---")
+        print("\n--- VIOLATIONS ---")
         for v in report['violations']:
             print(f"\n  File: {v['file']}")
-            print(f"  Import: {v['import']}")
+            if 'import' in v:
+                print(f"  Import: {v['import']}")
+            print(f"  Type: {v.get('type', 'unknown')}")
             print(f"  {v['message']}")
     
     print("\n" + "=" * 60)
@@ -283,6 +307,42 @@ def print_report(report: Dict) -> None:
     else:
         print("STATUS: PASSED")
         sys.exit(0)
+
+
+def check_versioned_files(root_dir: str = "app") -> List[Dict[str, str]]:
+    """Check for versioned or temporary file naming in active modules."""
+    violations = []
+    
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        # Skip __pycache__ and test directories
+        if "__pycache__" in dirpath or "/tests" in dirpath or "\\tests" in dirpath:
+            continue
+            
+        for filename in filenames:
+            if not filename.endswith(".py"):
+                continue
+            
+            # Check for versioned/temporary patterns
+            if VERSION_PATTERN.search(filename):
+                full_path = os.path.join(dirpath, filename)
+                
+                # Determine severity
+                if re.search(r"_[vV]\d+", filename):
+                    severity = "HIGH"
+                elif re.search(r"_(temp|refactor|fixed|better)", filename):
+                    severity = "MEDIUM"
+                else:
+                    severity = "MEDIUM"
+                
+                violations.append({
+                    "file": full_path,
+                    "pattern": VERSION_PATTERN.search(filename).group(),
+                    "severity": severity,
+                    "type": "versioned_filename",
+                    "message": f"Versioned/temporary filename: {filename}",
+                })
+    
+    return violations
 
 
 if __name__ == "__main__":
