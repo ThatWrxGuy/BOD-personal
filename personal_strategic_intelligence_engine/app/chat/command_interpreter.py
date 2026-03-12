@@ -1,5 +1,9 @@
-"""Command interpreter for routing intents to system modules."""
-from typing import Dict, Any, Optional
+"""Command interpreter for routing intents to system modules.
+
+This module routes chat intents to appropriate system modules.
+For actionable commands, governance approval is required via governance_bridge.
+"""
+from typing import Dict, Any, Optional, Tuple
 import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +13,25 @@ from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
+# Intents that require governance approval
+ACTIONABLE_INTENTS = {
+    "run_simulation",
+    "start_research",
+    "generate_plan",
+    "run_review",
+    "check_finances",
+}
+
+# Read-only intents that bypass governance
+READ_ONLY_INTENTS = {
+    "query_risks",
+    "query_opportunities",
+    "query_goals",
+    "system_status",
+    "list_bills",
+    "check_liquidity",
+}
+
 
 class CommandInterpreter:
     """Interpret intents and execute commands."""
@@ -16,7 +39,24 @@ class CommandInterpreter:
     def __init__(self, session: AsyncSession):
         self.session = session
     
-    async def execute(self, intent: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    async def requires_governance(self, intent: str) -> bool:
+        """Check if intent requires governance approval."""
+        return intent in ACTIONABLE_INTENTS
+    
+    async def create_proposal(
+        self,
+        intent: str,
+        message: str,
+        parameters: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Create governance proposal for actionable command."""
+        
+        from app.chat.governance_bridge import get_governance_bridge
+        
+        bridge = await get_governance_bridge(self.session)
+        return await bridge.create_proposal(intent, message, parameters)
+    
+    async def execute(self, intent: str, params: Dict[str, Any], require_approval: bool = True) -> Dict[str, Any]:
         """Execute a command based on intent."""
         
         if intent == IntentType.QUERY_RISKS:

@@ -64,17 +64,32 @@ async def send_message(
         chat_message.intent = intent
         chat_message.intent_confidence = confidence
         
-        # Execute command
+        # Check if governance approval is required
         interpreter = await get_command_interpreter(session)
-        result = await interpreter.execute(intent, params)
         
-        # Generate response
-        response = _generate_response(intent, result)
-        
-        chat_message.response = response
-        chat_message.status = ChatMessageStatus.COMPLETED
-        chat_message.command_type = intent
-        chat_message.command_result = result
+        if await interpreter.requires_governance(intent):
+            # Create governance proposal instead of direct execution
+            proposal_result = await interpreter.create_proposal(intent, message, params)
+            
+            chat_message.response = proposal_result.get("message", "Proposal created, awaiting approval.")
+            chat_message.status = ChatMessageStatus.COMPLETED
+            chat_message.command_type = "governance_proposal"
+            chat_message.command_result = proposal_result
+            
+            # Track metric
+            increment("chat_governance_proposals_created", domain=MetricDomain.SYSTEM)
+            
+        else:
+            # Execute read-only command directly
+            result = await interpreter.execute(intent, params, require_approval=False)
+            
+            # Generate response
+            response = _generate_response(intent, result)
+            
+            chat_message.response = response
+            chat_message.status = ChatMessageStatus.COMPLETED
+            chat_message.command_type = intent
+            chat_message.command_result = result
         
         # Update session
         chat_session.message_count += 1
