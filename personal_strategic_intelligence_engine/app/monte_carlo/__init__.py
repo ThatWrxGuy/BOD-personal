@@ -1,40 +1,34 @@
-"""Monte Carlo Module - Monte Carlo stress testing for strategic scenarios."""
-from app.monte_carlo.monte_carlo_engine import (
+"""DEPRECATED: Legacy Monte Carlo Module.
+
+This module is DEPRECATED. All Monte Carlo functionality has been migrated to:
+    app.simulation_engine
+
+Migration:
+    from app.simulation_engine import MonteCarloEngine, get_monte_carlo_engine
+
+This module will be removed in a future version.
+"""
+# DEPRECATED: Import forwarding to canonical simulation_engine
+from app.simulation_engine import (
     MonteCarloEngine,
     get_monte_carlo_engine,
+    SimulationConfig,
+    SimulationResult,
+    DomainState,
 )
-from app.monte_carlo.monte_carlo_types import (
-    MonteCarloBatch,
-    MonteCarloRun,
-    StressTestReport,
-    StrategyDistribution,
-    ResilienceMetrics,
-    SimulationRandomizationConfig,
-    StressTestPolicy,
-    MonteCarloStatus,
+
+from app.simulation_engine.simulation_models import (
+    SimulationType,
+    SimulationStatus,
 )
-from app.monte_carlo.monte_carlo_runner import MonteCarloRunner, get_monte_carlo_runner
-from app.monte_carlo.distribution_analyzer import DistributionAnalyzer, get_distribution_analyzer
-from app.monte_carlo.resilience_scorer import ResilienceScorer, get_resilience_scorer
 
 __all__ = [
-    # Engine
+    # Canonical imports (preferred)
     "MonteCarloEngine",
     "get_monte_carlo_engine",
-    # Types
-    "MonteCarloBatch",
-    "MonteCarloRun",
-    "StressTestReport",
-    "StrategyDistribution",
-    "ResilienceMetrics",
-    "SimulationRandomizationConfig",
-    "StressTestPolicy",
-    "MonteCarloStatus",
-    # Components
-    "MonteCarloRunner",
-    "get_monte_carlo_runner",
-    "DistributionAnalyzer",
-    "get_distribution_analyzer",
-    "ResilienceScorer",
-    "get_resilience_scorer",
+    "SimulationConfig",
+    "SimulationResult",
+    "SimulationType",
+    "SimulationStatus",
+    "DomainState",
 ]
