@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
-from app.simulation.system_simulator import SystemSimulator
+from app.simulation_engine import SimulationCore, get_simulation_core
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -172,7 +172,7 @@ async def list_strategic_simulations(
     session: AsyncSession = Depends(get_db),
 ):
     """List strategic simulation runs."""
-    from app.simulation.simulation_engine import get_simulation_engine
+    from app.simulation_engine import get_simulation_core as get_simulation_engine
     
     engine = await get_simulation_engine(session)
     simulations = await engine.get_simulations(status, limit)
@@ -205,7 +205,7 @@ async def run_strategic_simulation(
     session: AsyncSession = Depends(get_db),
 ):
     """Run a strategic simulation."""
-    from app.simulation.simulation_engine import get_simulation_engine
+    from app.simulation_engine import get_simulation_core as get_simulation_engine
     
     engine = await get_simulation_engine(session)
     
@@ -235,7 +235,7 @@ async def get_strategic_simulation(
     session: AsyncSession = Depends(get_db),
 ):
     """Get strategic simulation details."""
-    from app.simulation.simulation_engine import get_simulation_engine
+    from app.simulation_engine import get_simulation_core as get_simulation_engine
     
     engine = await get_simulation_engine(session)
     simulation = await engine.get_simulation(simulation_id)

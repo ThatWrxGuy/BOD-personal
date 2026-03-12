@@ -28,7 +28,7 @@ class PlanSimulationValidator:
         logger.info(f"Validating plan {plan_id} through simulation")
         
         # Import simulation engine
-        from app.simulation.simulation_engine import get_simulation_engine
+        from app.simulation_engine import get_simulation_core
         
         simulation_engine = await get_simulation_engine(self.session)
         

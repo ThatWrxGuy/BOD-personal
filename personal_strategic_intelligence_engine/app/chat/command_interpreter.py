@@ -161,7 +161,7 @@ class CommandInterpreter:
     async def _run_simulation(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Run a simulation."""
         
-        from app.simulation.simulation_engine import get_simulation_engine
+        from app.simulation_engine import get_simulation_core
         
         engine = await get_simulation_engine(self.session)
         

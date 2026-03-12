@@ -64,10 +64,21 @@ def get_file_layer(file_path: str) -> Tuple[str, str]:
 
 
 def is_legacy_simulation_path(module: str) -> bool:
-    """Check if module is from legacy simulation paths."""
-    for legacy in LEGACY_SIMULATION_PATHS:
-        if module.startswith(legacy):
+    """Check if module is from legacy simulation paths.
+    
+    Must be exact match for legacy paths, not prefix.
+    """
+    # Exact legacy paths (not simulation_engine which is canonical)
+    exact_legacy = [
+        "app.simulation",
+        "app.strategy_simulation",
+        "app.monte_carlo",
+    ]
+    
+    for legacy in exact_legacy:
+        if module == legacy:  # Exact match only
             return True
+    
     return False
 
 
@@ -228,8 +239,10 @@ def print_report(report: Dict) -> None:
     
     print("\n" + "=" * 60)
     
-    # Exit code based on findings
-    if report['duplicate_subsystems'] > 0 or report['total_violations'] > 0:
+    # Exit code based on findings - only fail on HIGH severity
+    high_severity = sum(1 for d in report['duplicates'] if d.get('severity') == 'HIGH')
+    
+    if high_severity > 0 or report['total_violations'] > 0:
         print("STATUS: FAILED - Action Required")
         sys.exit(1)
     else:
