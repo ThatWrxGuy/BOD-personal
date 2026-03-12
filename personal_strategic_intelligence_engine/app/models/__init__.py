@@ -36,6 +36,7 @@ from app.models.finance_ops import Bill, ExpenseRecord, SubscriptionRecord, Cash
 from app.models.simulation import SimulationRun, SimulationScenario, SimulationResult
 from app.models.chat import ChatSession, ChatMessage
 from app.models.rhythm import DailyPlan, WeeklyPlan, Habit, HabitCompletion, FocusBlock, EnergyPattern
+from app.models.autonomy import StrategyLoopCycle, LoopPolicy
 
 __all__ = [
     "UserProfile",
@@ -127,4 +128,6 @@ __all__ = [
     "HabitCompletion",
     "FocusBlock",
     "EnergyPattern",
+    "StrategyLoopCycle",
+    "LoopPolicy",
 ]
