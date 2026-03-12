@@ -31,11 +31,23 @@ LEGACY_SIMULATION_PATHS = [
     "app.monte_carlo",
 ]
 
+# Deprecated forecasting paths - should use app.forecasting instead
+DEPRECATED_FORECASTING_PATHS = [
+    "app.intelligence.forecasting_engine",
+    "app.intelligence.trend_analyzer",
+    "app.intelligence.risk_projection_engine",
+    "app.intelligence.goal_probability_model",
+]
+
 # Legacy directories that are now wrappers - ignore their internal imports
 LEGACY_DIRS = [
     "app/simulation",
     "app/strategy_simulation", 
     "app/monte_carlo",
+    "app/intelligence/forecasting_engine.py",
+    "app/intelligence/trend_analyzer.py",
+    "app/intelligence/risk_projection_engine.py",
+    "app/intelligence/goal_probability_model.py",
 ]
 
 # These paths are allowed to import legacy (for backward compatibility testing)
@@ -43,6 +55,11 @@ ALLOWED_LEGACY_IMPORTS = [
     "app/simulation/__init__.py",
     "app/strategy_simulation/__init__.py",
     "app/monte_carlo/__init__.py",
+    # Forecasting wrappers
+    "app/intelligence/forecasting_engine.py",
+    "app/intelligence/trend_analyzer.py",
+    "app/intelligence/risk_projection_engine.py",
+    "app/intelligence/goal_probability_model.py",
 ]
 
 # Maximum allowed files in legacy directories (for wrapper detection)
@@ -52,6 +69,14 @@ MAX_LEGACY_WRAPPER_FILES = 5
 def is_in_legacy_dir(file_path: str) -> bool:
     """Check if file is in a legacy directory."""
     return any(legacy in file_path for legacy in LEGACY_DIRS)
+
+
+def is_deprecated_forecasting(module: str) -> bool:
+    """Check if module is from deprecated forecasting paths."""
+    for deprecated in DEPRECATED_FORECASTING_PATHS:
+        if module == deprecated:
+            return True
+    return False
 
 
 def get_file_layer(file_path: str) -> Tuple[str, str]:
@@ -76,7 +101,7 @@ def is_legacy_simulation_path(module: str) -> bool:
     ]
     
     for legacy in exact_legacy:
-        if module == legacy:  # Exact match only
+        if module == legacy:
             return True
     
     return False
@@ -110,22 +135,32 @@ def check_imports(file_path: str) -> List[Dict[str, str]]:
     for line in import_lines:
         # Extract module being imported
         if 'from app.' in line:
-            module = line.split('from app.')[1].split('.')[0]
-            import_path = 'app.' + module
+            parts = line.split('from app.')[1].split('.')
+            module = 'app.' + parts[0]
         elif 'import app.' in line:
-            module = line.split('import app.')[1].split('.')[0]
-            import_path = 'app.' + module
+            parts = line.split('import app.')[1].split('.')
+            module = 'app.' + parts[0]
         else:
             continue
         
         # Check if importing from legacy simulation paths
-        if is_legacy_simulation_path(import_path):
+        if is_legacy_simulation_path(module):
             violations.append({
                 "file": file_path,
-                "import": import_path,
+                "import": module,
                 "type": "legacy_simulation_import",
                 "severity": "HIGH",
-                "message": f"Import from legacy simulation path: {import_path}",
+                "message": f"Import from legacy simulation path: {module}",
+            })
+        
+        # Check if importing from deprecated forecasting paths
+        if is_deprecated_forecasting(module):
+            violations.append({
+                "file": file_path,
+                "import": module,
+                "type": "deprecated_forecasting_import",
+                "severity": "MEDIUM",
+                "message": f"Import from deprecated forecasting path: {module}",
             })
     
     return violations
