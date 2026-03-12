@@ -30,6 +30,10 @@ READ_ONLY_INTENTS = {
     "system_status",
     "list_bills",
     "check_liquidity",
+    "generate_daily_plan",  # Rhythm commands - read operations
+    "show_weekly_priorities",
+    "what_focus_today",
+    "show_habits",
 }
 
 
@@ -91,6 +95,19 @@ class CommandInterpreter:
         
         elif intent == IntentType.CHECK_LIQUIDITY:
             return await self._check_liquidity(params)
+        
+        # Rhythm commands
+        elif intent == "generate_daily_plan":
+            return await self._generate_daily_plan(params)
+        
+        elif intent == "show_weekly_priorities":
+            return await self._show_weekly_priorities(params)
+        
+        elif intent == "what_focus_today":
+            return await self._what_focus_today(params)
+        
+        elif intent == "show_habits":
+            return await self._show_habits(params)
         
         else:
             return await self._general_query(params)
@@ -336,6 +353,72 @@ class CommandInterpreter:
                 {"message": a.message, "severity": a.severity}
                 for a in liquidity.get("alerts", [])[:3]
             ],
+        }
+    
+    # === RHYTHM COMMANDS ===
+    
+    async def _generate_daily_plan(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate daily plan."""
+        
+        from app.rhythm.daily_planner import get_daily_planner
+        from datetime import date
+        
+        planner = await get_daily_planner(self.session)
+        plan = await planner.generate_plan(date.today())
+        
+        return {
+            "type": "daily_plan",
+            "plan_id": str(plan["id"]),
+            "date": plan["date"],
+            "priorities": plan.get("strategic_priorities", []),
+            "tasks": plan.get("tasks", []),
+            "focus_blocks": plan.get("focus_blocks", []),
+        }
+    
+    async def _show_weekly_priorities(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Show weekly priorities."""
+        
+        from app.rhythm.weekly_planner import get_weekly_planner
+        from datetime import date
+        
+        planner = await get_weekly_planner(self.session)
+        plan = await planner.generate_plan()
+        
+        return {
+            "type": "weekly_plan",
+            "plan_id": str(plan["id"]),
+            "week_start": plan["week_start"],
+            "top_priorities": plan.get("top_priorities", []),
+            "focus_themes": plan.get("focus_themes", []),
+        }
+    
+    async def _what_focus_today(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Get focus for today."""
+        
+        from app.rhythm.rhythm_engine import get_rhythm_engine
+        from datetime import date
+        
+        engine = await get_rhythm_engine(self.session)
+        blocks = await engine.get_focus_blocks(date.today())
+        
+        return {
+            "type": "focus_today",
+            "date": str(date.today()),
+            "focus_blocks": blocks,
+        }
+    
+    async def _show_habits(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Show habits."""
+        
+        from app.rhythm.rhythm_engine import get_rhythm_engine
+        
+        engine = await get_rhythm_engine(self.session)
+        habits = await engine.get_habits()
+        
+        return {
+            "type": "habits",
+            "count": len(habits),
+            "habits": habits,
         }
     
     async def _general_query(self, params: Dict[str, Any]) -> Dict[str, Any]:

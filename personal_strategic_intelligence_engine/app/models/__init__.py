@@ -35,6 +35,7 @@ from app.models.research import ResearchTask, ResearchReport, ResearchSourceResu
 from app.models.finance_ops import Bill, ExpenseRecord, SubscriptionRecord, CashFlowForecast, LiquidityAlert, AccountBalance
 from app.models.simulation import SimulationRun, SimulationScenario, SimulationResult
 from app.models.chat import ChatSession, ChatMessage
+from app.models.rhythm import DailyPlan, WeeklyPlan, Habit, HabitCompletion, FocusBlock, EnergyPattern
 
 __all__ = [
     "UserProfile",
@@ -120,4 +121,10 @@ __all__ = [
     "SimulationResult",
     "ChatSession",
     "ChatMessage",
+    "DailyPlan",
+    "WeeklyPlan",
+    "Habit",
+    "HabitCompletion",
+    "FocusBlock",
+    "EnergyPattern",
 ]
