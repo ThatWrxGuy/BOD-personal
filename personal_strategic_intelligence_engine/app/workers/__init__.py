@@ -11,6 +11,10 @@ from app.workers.intelligence_worker import (
     IntelligenceWorker,
     get_intelligence_worker,
 )
+from app.workers.domain_optimization_worker import (
+    DomainOptimizationWorker,
+    get_domain_optimization_worker,
+)
 
 __all__ = [
     "SignalCollectorWorker",
@@ -19,4 +23,6 @@ __all__ = [
     "get_governance_worker",
     "IntelligenceWorker",
     "get_intelligence_worker",
+    "DomainOptimizationWorker",
+    "get_domain_optimization_worker",
 ]

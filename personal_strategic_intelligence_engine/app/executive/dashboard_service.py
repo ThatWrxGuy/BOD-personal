@@ -30,6 +30,7 @@ class DashboardService:
         financial = await command_center.get_financial_snapshot()
         habits = await self._get_habits()
         autonomy = await self._get_autonomy_dashboard()
+        domain_health = await self._get_domain_health()
         
         return {
             "strategic_overview": strategic,
@@ -39,6 +40,7 @@ class DashboardService:
             "financial": financial,
             "habits": habits,
             "autonomy": autonomy,
+            "domain_health": domain_health,
             "generated_at": datetime.utcnow().isoformat(),
         }
     
@@ -150,6 +152,68 @@ class DashboardService:
         except Exception as e:
             logger.warning(f"Error in autonomy dashboard: {e}")
             return {"status": "unknown"}
+    
+    async def _get_domain_health(self) -> Dict[str, Any]:
+        """Get life domain health panel."""
+        
+        try:
+            from app.optimization import (
+                get_domain_optimizer,
+                get_domain_modeler,
+                get_domain_scorer,
+            )
+            
+            optimizer = get_domain_optimizer()
+            modeler = get_domain_modeler()
+            scorer = get_domain_scorer()
+            
+            # Get domain metrics
+            domain_metrics = modeler.get_all_domain_metrics()
+            
+            # Calculate overall health
+            health = scorer.calculate_domain_health(domain_metrics)
+            balance = scorer.calculate_balance_score(domain_metrics)
+            
+            # Get conditions
+            conditions = scorer.detect_all_conditions(domain_metrics)
+            
+            # Get optimization summary
+            summary = optimizer.get_optimization_summary()
+            
+            # Build domain details
+            domains = []
+            for dm in domain_metrics:
+                domains.append({
+                    "domain": dm.domain.value,
+                    "score": round(dm.composite_score, 2),
+                    "health_status": dm.health_status,
+                    "performance": round(dm.performance_score, 2),
+                    "risk": round(dm.risk_score, 2),
+                    "opportunity": round(dm.opportunity_score, 2),
+                    "momentum": round(dm.momentum_score, 2),
+                    "alignment": round(dm.alignment_score, 2),
+                    "resource_allocation": round(dm.resource_allocation, 1),
+                    "priority": dm.strategic_priority,
+                })
+            
+            return {
+                "overall_health": round(health, 2),
+                "balance_score": round(balance, 2),
+                "domains": domains,
+                "needs_attention": summary.get("domains_needing_attention", []),
+                "top_opportunities": summary.get("top_opportunities", []),
+                "pending_recommendations": summary.get("pending_recommendations", 0),
+            }
+        except Exception as e:
+            logger.warning(f"Error in domain health: {e}")
+            return {
+                "overall_health": 0.0,
+                "balance_score": 0.0,
+                "domains": [],
+                "needs_attention": [],
+                "top_opportunities": [],
+                "pending_recommendations": 0,
+            }
 
 
 async def get_dashboard_service(session: AsyncSession) -> DashboardService:
