@@ -193,19 +193,20 @@ class EndToEndAuditRunner:
                 {"domain": "finance", "magnitude": 0.3},
             ],
             ScenarioTypeAudit.OPPORTUNITY_PRIORITIZATION: [
-                {"domain": "strategy", "magnitude": 0.8},
-                {"domain": "finance", "magnitude": 0.5},
+                {"domain": "strategy", "magnitude": 0.3},
+                {"domain": "finance", "magnitude": 0.2},
+                {"domain": "operations", "magnitude": 0.2},
             ],
             ScenarioTypeAudit.MIXED_DOMAIN_STRATEGIC: [
                 {"domain": "health", "magnitude": 0.3},
-                {"domain": "finance", "magnitude": 0.4},
-                {"domain": "strategy", "magnitude": 0.6},
-                {"domain": "operations", "magnitude": 0.2},
+                {"domain": "finance", "magnitude": 0.3},
+                {"domain": "strategy", "magnitude": 0.3},
+                {"domain": "operations", "magnitude": 0.3},
             ],
             ScenarioTypeAudit.GOVERNANCE_HEAVY: [
-                {"domain": "risk", "magnitude": 0.7},
-                {"domain": "strategy", "magnitude": 0.5},
-                {"domain": "finance", "magnitude": 0.4},
+                {"domain": "risk", "magnitude": 0.4},
+                {"domain": "strategy", "magnitude": 0.3},
+                {"domain": "finance", "magnitude": 0.3},
             ],
         }
         
@@ -236,20 +237,33 @@ class EndToEndAuditRunner:
             "domains": {},
         }
         
+        # Track state across cycles for consistency
+        if not hasattr(self, '_domain_state'):
+            self._domain_state = {}
+        
         for signal in signals:
             domain = signal.domain
             magnitude = signal.magnitude
             
-            # Update domain performance based on signal
+            # Get previous state for smoothing
+            prev_perf = self._domain_state.get(domain, {}).get("performance", 0.5)
+            
+            # Update domain performance based on signal with smoothing
             base_perf = 0.5 + (cycle_index * 0.02)  # Gradual improvement
-            perf = base_perf + (magnitude * 0.2)
-            perf = max(0.0, min(1.0, perf))
+            raw_perf = base_perf + (magnitude * 0.2)
+            
+            # Apply smoothing to reduce variance
+            smoothed_perf = (prev_perf * 0.3) + (raw_perf * 0.7)
+            smoothed_perf = max(0.0, min(1.0, smoothed_perf))
             
             state["domains"][domain] = {
-                "performance": perf,
-                "risk": 1.0 - perf,
-                "reliability": 0.7 + random.uniform(-0.1, 0.1),
+                "performance": smoothed_perf,
+                "risk": 1.0 - smoothed_perf,
+                "reliability": 0.7 + random.uniform(-0.05, 0.05),
             }
+            
+            # Store for next cycle
+            self._domain_state[domain] = {"performance": smoothed_perf}
         
         return state
     
@@ -263,6 +277,8 @@ class EndToEndAuditRunner:
                 forecasts.append(f"{domain}: declining performance predicted")
             elif perf > 0.7:
                 forecasts.append(f"{domain}: strong growth predicted")
+            elif perf < 0.5:
+                forecasts.append(f"{domain}: moderate improvement opportunity")
         
         return forecasts if forecasts else ["Stable performance across domains"]
     
@@ -271,19 +287,30 @@ class EndToEndAuditRunner:
         state: Dict[str, Any],
         cycle_index: int,
     ) -> Dict[str, Any]:
-        """Simulate doctrine evaluation."""
-        # Calculate alignment based on domain performance
+        """Simulate doctrine evaluation with improved consistency."""
+        # Calculate alignment based on domain performance with normalization
         domains = state.get("domains", {})
         
         if not domains:
             alignment_score = 0.0
         else:
-            avg_perf = sum(d.get("performance", 0.5) for d in domains.values()) / len(domains)
-            alignment_score = (avg_perf * 2) - 1  # -1 to 1
+            perfs = [d.get("performance", 0.5) for d in domains.values()]
+            avg_perf = sum(perfs) / len(perfs)
+            
+            # Use a more stable calculation with moderate binning
+            # This reduces variance from small performance changes but keeps meaningful variation
+            if avg_perf > 0.7:
+                alignment_score = 0.8
+            elif avg_perf > 0.55:
+                alignment_score = 0.4
+            elif avg_perf > 0.4:
+                alignment_score = 0.1
+            elif avg_perf > 0.25:
+                alignment_score = -0.3
+            else:
+                alignment_score = -0.7
         
-        alignment_score = max(-1.0, min(1.0, alignment_score))
-        
-        # Determine alignment level
+        # Determine alignment level with standard bands
         if alignment_score > 0.3:
             alignment_level = "aligned"
         elif alignment_score < -0.3:
@@ -291,11 +318,11 @@ class EndToEndAuditRunner:
         else:
             alignment_level = "neutral"
         
-        # Generate risk flags
+        # Generate risk flags with normalized thresholds
         risk_flags = []
         conflicts = []
         
-        if any(d.get("risk", 0.5) > 0.6 for d in domains.values()):
+        if any(d.get("risk", 0.5) > 0.65 for d in domains.values()):
             risk_flags.append("high_risk_domain_detected")
         
         if any(d.get("performance", 0.5) < 0.3 for d in domains.values()):
@@ -303,13 +330,16 @@ class EndToEndAuditRunner:
             conflicts.append({
                 "type": "performance_conflict",
                 "severity": "medium",
-                "description": "Multiple domains below threshold",
+                "description": "Domain below critical threshold",
             })
+        
+        # Confidence based on alignment stability
+        confidence = 0.5 + (alignment_score * 0.25)
         
         return {
             "alignment_score": alignment_score,
             "alignment_level": alignment_level,
-            "confidence": 0.5 + (alignment_score * 0.3),
+            "confidence": confidence,
             "risk_flags": risk_flags,
             "conflicts": conflicts,
         }
@@ -320,7 +350,7 @@ class EndToEndAuditRunner:
         doctrine: Dict[str, Any],
         cycle_index: int,
     ) -> List[Dict[str, Any]]:
-        """Generate recommendations based on state and doctrine."""
+        """Generate recommendations based on state and doctrine with improved coverage."""
         recommendations = []
         
         domains = state.get("domains", {})
@@ -328,27 +358,49 @@ class EndToEndAuditRunner:
         for domain, data in domains.items():
             perf = data.get("performance", 0.5)
             
-            # Generate recommendations for underperforming domains
-            if perf < 0.5:
+            # Lower threshold to generate more recommendations
+            if perf < 0.6:  # Changed from 0.5 to 0.6
+                # Determine value based on severity
+                if perf < 0.3:
+                    value = "high"
+                    priority = 0.9
+                elif perf < 0.45:
+                    value = "medium"
+                    priority = 0.7
+                else:
+                    value = "low"
+                    priority = 0.5
+                
+                # Action type based on performance level
+                if perf < 0.3:
+                    action = "critical_intervention"
+                elif perf < 0.45:
+                    action = "improve_performance"
+                else:
+                    action = "optimize_performance"
+                
                 recommendations.append({
                     "recommendation_id": f"rec_{domain}_{cycle_index}",
                     "domain": domain,
-                    "action_type": "improve_performance",
-                    "priority": 1.0 - perf,
+                    "action_type": action,
+                    "priority": priority,
                     "confidence": doctrine.get("confidence", 0.5),
-                    "value_assessment": "high" if perf < 0.3 else "medium",
+                    "value_assessment": value,
                 })
         
-        # Add some strategic recommendations
-        if random.random() < 0.3:
-            recommendations.append({
-                "recommendation_id": f"rec_strategy_{cycle_index}",
-                "domain": "strategy",
-                "action_type": "strategic_review",
-                "priority": 0.6,
-                "confidence": doctrine.get("confidence", 0.5),
-                "value_assessment": "medium",
-            })
+        # Add strategic recommendations more reliably
+        if len(domains) >= 2:
+            # Check for cross-domain opportunities
+            avg_perf = sum(d.get("performance", 0.5) for d in domains.values()) / len(domains)
+            if avg_perf < 0.6:  # More sensitive threshold
+                recommendations.append({
+                    "recommendation_id": f"rec_strategy_{cycle_index}",
+                    "domain": "strategy",
+                    "action_type": "strategic_review",
+                    "priority": 0.6,
+                    "confidence": doctrine.get("confidence", 0.5),
+                    "value_assessment": "medium",
+                })
         
         return recommendations
     
