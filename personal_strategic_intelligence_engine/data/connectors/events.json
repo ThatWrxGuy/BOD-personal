@@ -1,0 +1,46 @@
+[
+  {
+    "connector_name": "calendar",
+    "event_type": "sync_complete",
+    "status": "success",
+    "message": "Produced 4 signals",
+    "signals_count": 4,
+    "duration_ms": 0.0,
+    "error_type": null,
+    "error_message": null,
+    "created_at": "2026-03-13 18:02:11.489008"
+  },
+  {
+    "connector_name": "finance",
+    "event_type": "sync_complete",
+    "status": "success",
+    "message": "Produced 5 signals",
+    "signals_count": 5,
+    "duration_ms": 0.0,
+    "error_type": null,
+    "error_message": null,
+    "created_at": "2026-03-13 18:02:11.489957"
+  },
+  {
+    "connector_name": "tasks",
+    "event_type": "sync_complete",
+    "status": "success",
+    "message": "Produced 5 signals",
+    "signals_count": 5,
+    "duration_ms": 0.0,
+    "error_type": null,
+    "error_message": null,
+    "created_at": "2026-03-13 18:02:11.490724"
+  },
+  {
+    "connector_name": "health",
+    "event_type": "sync_complete",
+    "status": "success",
+    "message": "Produced 5 signals",
+    "signals_count": 5,
+    "duration_ms": 0.0,
+    "error_type": null,
+    "error_message": null,
+    "created_at": "2026-03-13 18:02:11.491535"
+  }
+]
