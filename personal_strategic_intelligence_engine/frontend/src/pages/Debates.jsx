@@ -23,7 +23,7 @@ const positionColors = {
 export default function Debates() {
   const [sessions, setSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [arguments, setArguments] = useState([]);
+  const [debateArgs, setDebateArgs] = useState([]);
   const [votes, setVotes] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
@@ -62,7 +62,7 @@ export default function Debates() {
       const votesData = await votesRes.json();
       
       setSelectedSession(sessionId);
-      setArguments(argsData.arguments || []);
+      setDebateArgs(argsData.arguments || []);
       setVotes(votesData);
     } catch (error) {
       console.error('Failed to fetch session details:', error);
@@ -236,7 +236,7 @@ export default function Debates() {
                 
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map(round => {
-                    const roundArgs = arguments.filter(a => a.round_number === round);
+                    const roundArgs = debateArgs.filter(a => a.round_number === round);
                     if (roundArgs.length === 0) return null;
                     
                     return (

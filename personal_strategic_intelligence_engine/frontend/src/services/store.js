@@ -82,7 +82,7 @@ export const useAppStore = create((set, get) => ({
   // Fetch functions
   fetchDashboard: async () => {
     try {
-      const { governanceApi } = await import('./services/api');
+      const { governanceApi } = await import('./api');
       const response = await governanceApi.dashboard();
       set({ dashboard: response.data });
     } catch (error) {
@@ -93,7 +93,7 @@ export const useAppStore = create((set, get) => ({
   fetchSignals: async () => {
     set({ signalsLoading: true });
     try {
-      const { signalsApi } = await import('./services/api');
+      const { signalsApi } = await import('./api');
       const response = await signalsApi.list({ limit: 50 });
       set({ signals: response.data.signals || [], signalsError: null });
     } catch (error) {
@@ -106,7 +106,7 @@ export const useAppStore = create((set, get) => ({
   fetchGovernance: async () => {
     set({ governanceLoading: true });
     try {
-      const { governanceApi } = await import('./services/api');
+      const { governanceApi } = await import('./api');
       const [goalsRes, plansRes, triggersRes] = await Promise.all([
         governanceApi.goals.list(),
         governanceApi.plans.list(),
@@ -127,7 +127,7 @@ export const useAppStore = create((set, get) => ({
   fetchIntelligence: async () => {
     set({ intelligenceLoading: true });
     try {
-      const { intelligenceApi } = await import('./services/api');
+      const { intelligenceApi } = await import('./api');
       const [trendsRes, risksRes, forecastsRes] = await Promise.all([
         intelligenceApi.trends({ days: 30 }),
         intelligenceApi.risks.list({ min_probability: 0.5 }),
@@ -148,7 +148,7 @@ export const useAppStore = create((set, get) => ({
   fetchSimulations: async () => {
     set({ simulationLoading: true });
     try {
-      const { simulationApi } = await import('./services/api');
+      const { simulationApi } = await import('./api');
       const response = await simulationApi.list();
       set({ simulations: response.data.runs || [] });
     } catch (error) {
@@ -161,7 +161,7 @@ export const useAppStore = create((set, get) => ({
   fetchDecisions: async () => {
     set({ decisionsLoading: true });
     try {
-      const { decisionsApi } = await import('./services/api');
+      const { decisionsApi } = await import('./api');
       const response = await decisionsApi.list({ limit: 20 });
       set({ decisions: response.data.decisions || [] });
     } catch (error) {
@@ -174,7 +174,7 @@ export const useAppStore = create((set, get) => ({
   fetchHealth: async () => {
     set({ healthLoading: true });
     try {
-      const { healthApi } = await import('./services/api');
+      const { healthApi } = await import('./api');
       const response = await healthApi.check();
       set({ systemHealth: response.data });
     } catch (error) {
