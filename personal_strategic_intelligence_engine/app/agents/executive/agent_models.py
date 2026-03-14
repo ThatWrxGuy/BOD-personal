@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
-from app.executive_agents.agent_types import (
+from app.agents.executive.agent_types import (
     ExecutiveRole,
     ProposalStatus,
     DebatePosition,

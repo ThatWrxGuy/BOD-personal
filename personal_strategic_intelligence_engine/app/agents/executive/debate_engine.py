@@ -3,8 +3,8 @@ import uuid
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-from app.executive_agents.agent_types import DebatePosition
-from app.executive_agents.agent_models import (
+from app.agents.executive.agent_types import DebatePosition
+from app.agents.executive.agent_models import (
     AgentProposal,
     DebateArgument,
     DebateRound,

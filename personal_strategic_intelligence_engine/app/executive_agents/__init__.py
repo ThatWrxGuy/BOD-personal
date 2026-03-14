@@ -1,44 +1,50 @@
-"""Executive Agent System - AI Board of Directors.
+"""Compatibility module for executive agents.
 
-This module provides multi-agent strategic deliberation:
-- CEO, CFO, COO, CSO, CRO, CKO, CPO agents
-- Debate engine for structured deliberation
-- Agent council for final decision making
+DEPRECATED: This module is maintained for backward compatibility.
+Please use app.agents.executive instead.
+
+This module re-exports all executive agents from the canonical location.
 """
-from app.executive_agents.agent_types import (
+import warnings
+
+# Emit deprecation warning
+warnings.warn(
+    "app.executive_agents is deprecated. Please use app.agents.executive instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
+# Re-export from canonical location
+from app.agents.executive import (
+    # Types
     ExecutiveRole,
     ProposalStatus,
     DebatePosition,
     ProposalPriority,
-)
-
-from app.executive_agents.agent_models import (
+    # Models
     AgentProposal,
     DebateArgument,
     DebateRound,
     DebateSummary,
     CouncilDecision,
     CouncilCycle,
-)
-
-from app.executive_agents.base_agent import BaseExecutiveAgent
-
-from app.executive_agents.agent_council import (
+    # Base
+    BaseExecutiveAgent,
+    # Council
     AgentCouncil,
     get_agent_council,
     reset_agent_council,
+    # Debate
+    DebateEngine,
+    # Individual Agents
+    CEOAgent,
+    CFOAgent,
+    COOAgent,
+    CSOAgent,
+    CROAgent,
+    CKOAgent,
+    CPOAgent,
 )
-
-from app.executive_agents.debate_engine import DebateEngine
-
-# Individual agents
-from app.executive_agents.ceo_agent import CEOAgent
-from app.executive_agents.cfo_agent import CFOAgent
-from app.executive_agents.coo_agent import COOAgent
-from app.executive_agents.cso_agent import CSOAgent
-from app.executive_agents.cro_agent import CROAgent
-from app.executive_agents.cko_agent import CKOAgent
-from app.executive_agents.cpo_agent import CPOAgent
 
 __all__ = [
     # Types

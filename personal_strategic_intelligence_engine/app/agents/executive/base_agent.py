@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, List
 import uuid
 
-from app.executive_agents.agent_types import ExecutiveRole, ProposalPriority
-from app.executive_agents.agent_models import AgentProposal
+from app.agents.executive.agent_types import ExecutiveRole, ProposalPriority
+from app.agents.executive.agent_models import AgentProposal
 from app.state_engine import StateEngine, get_state_engine
 from app.meta_cognition import get_meta_engine
 

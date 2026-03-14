@@ -2,9 +2,9 @@
 from typing import Dict, Any, List
 import uuid
 
-from app.executive_agents.base_agent import BaseExecutiveAgent
-from app.executive_agents.agent_types import ExecutiveRole, ProposalPriority
-from app.executive_agents.agent_models import AgentProposal
+from app.agents.executive.base_agent import BaseExecutiveAgent
+from app.agents.executive.agent_types import ExecutiveRole, ProposalPriority
+from app.agents.executive.agent_models import AgentProposal
 
 
 class CPOAgent(BaseExecutiveAgent):

@@ -3,21 +3,21 @@ import uuid
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-from app.executive_agents.agent_types import ExecutiveRole
-from app.executive_agents.agent_models import (
+from app.agents.executive.agent_types import ExecutiveRole
+from app.agents.executive.agent_models import (
     AgentProposal,
     CouncilDecision,
     CouncilCycle,
 )
-from app.executive_agents.debate_engine import DebateEngine
-from app.executive_agents.base_agent import BaseExecutiveAgent
-from app.executive_agents.ceo_agent import CEOAgent
-from app.executive_agents.cfo_agent import CFOAgent
-from app.executive_agents.coo_agent import COOAgent
-from app.executive_agents.cso_agent import CSOAgent
-from app.executive_agents.cro_agent import CROAgent
-from app.executive_agents.cko_agent import CKOAgent
-from app.executive_agents.cpo_agent import CPOAgent
+from app.agents.executive.debate_engine import DebateEngine
+from app.agents.executive.base_agent import BaseExecutiveAgent
+from app.agents.executive.ceo_agent import CEOAgent
+from app.agents.executive.cfo_agent import CFOAgent
+from app.agents.executive.coo_agent import COOAgent
+from app.agents.executive.cso_agent import CSOAgent
+from app.agents.executive.cro_agent import CROAgent
+from app.agents.executive.cko_agent import CKOAgent
+from app.agents.executive.cpo_agent import CPOAgent
 
 
 class AgentCouncil:
