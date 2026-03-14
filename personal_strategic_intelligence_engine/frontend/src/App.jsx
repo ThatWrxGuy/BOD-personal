@@ -15,6 +15,7 @@ import Learning from './pages/Learning';
 import DataPlatform from './pages/DataPlatform';
 import Agents from './pages/Agents';
 import Orchestration from './pages/Orchestration';
+import TacticalWorkspace from './pages/finance/tactical/TacticalWorkspace';
 import { useAppStore } from './services/store';
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="agents" element={<Agents />} />
           <Route path="orchestration" element={<Orchestration />} />
           <Route path="system" element={<SystemHealth />} />
+          <Route path="finance/tactical" element={<TacticalWorkspace />} />
         </Route>
       </Routes>
     </BrowserRouter>
