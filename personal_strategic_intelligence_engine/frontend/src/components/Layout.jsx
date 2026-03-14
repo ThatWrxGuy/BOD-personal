@@ -14,24 +14,69 @@ import {
   Menu,
   X,
   Bell,
-  Settings
+  Settings,
+  Database,
+  Bot,
+  Workflow,
+  Scale,
+  RefreshCw
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAppStore } from '../services/store';
 
+// Navigation items organized by architectural layer
 const navItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/signals', label: 'Signals', icon: Radio },
-  { path: '/governance', label: 'Governance', icon: Shield },
-  { path: '/goals', label: 'Goals & Plans', icon: Target },
-  { path: '/intelligence', label: 'Intelligence', icon: Brain },
-  { path: '/simulations', label: 'Simulations', icon: FlaskConical },
-  { path: '/decisions', label: 'Decisions', icon: CheckSquare },
-  { path: '/debates', label: 'Debates', icon: MessageSquare },
-  { path: '/execution', label: 'Execution', icon: Play },
-  { path: '/learning', label: 'Learning', icon: BookOpen },
-  { path: '/system', label: 'System Health', icon: Activity },
+  // Executive Layer
+  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, layer: 'executive' },
+  
+  // Observation Layer
+  { path: '/signals', label: 'Signals', icon: Radio, layer: 'observation' },
+  
+  // Analysis Layer
+  { path: '/intelligence', label: 'Intelligence', icon: Brain, layer: 'analysis' },
+  
+  // Planning Layer
+  { path: '/goals', label: 'Goals & Plans', icon: Target, layer: 'planning' },
+  { path: '/simulations', label: 'Simulations', icon: FlaskConical, layer: 'planning' },
+  
+  // Decision Layer
+  { path: '/decisions', label: 'Decisions', icon: CheckSquare, layer: 'decision' },
+  { path: '/debates', label: 'Debates', icon: MessageSquare, layer: 'decision' },
+  { path: '/governance', label: 'Governance', icon: Scale, layer: 'decision' },
+  
+  // Execution Layer
+  { path: '/execution', label: 'Execution', icon: Play, layer: 'execution' },
+  
+  // Learning Layer
+  { path: '/learning', label: 'Learning', icon: BookOpen, layer: 'learning' },
+  
+  // Data Platform
+  { path: '/data-platform', label: 'Data Platform', icon: Database, layer: 'platform' },
+  
+  // Agent Toolkits
+  { path: '/agents', label: 'Agents', icon: Bot, layer: 'agents' },
+  
+  // Orchestration
+  { path: '/orchestration', label: 'Orchestration', icon: Workflow, layer: 'orchestration' },
+  
+  // System
+  { path: '/system', label: 'System Health', icon: Activity, layer: 'system' },
 ];
+
+// Layer labels for section headers
+const layerLabels = {
+  executive: 'Executive',
+  observation: 'Observation',
+  analysis: 'Analysis',
+  planning: 'Planning',
+  decision: 'Decision',
+  execution: 'Execution',
+  learning: 'Learning',
+  platform: 'Data Platform',
+  agents: 'Agents',
+  orchestration: 'Orchestration',
+  system: 'System',
+};
 
 export default function Layout() {
   const { sidebarOpen, toggleSidebar, notifications, removeNotification } = useAppStore();

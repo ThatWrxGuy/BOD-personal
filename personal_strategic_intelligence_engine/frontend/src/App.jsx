@@ -12,6 +12,9 @@ import SystemHealth from './pages/SystemHealth';
 import Execution from './pages/Execution';
 import Debates from './pages/Debates';
 import Learning from './pages/Learning';
+import DataPlatform from './pages/DataPlatform';
+import Agents from './pages/Agents';
+import Orchestration from './pages/Orchestration';
 import { useAppStore } from './services/store';
 
 function App() {
@@ -42,6 +45,9 @@ function App() {
           <Route path="debates" element={<Debates />} />
           <Route path="execution" element={<Execution />} />
           <Route path="learning" element={<Learning />} />
+          <Route path="data-platform" element={<DataPlatform />} />
+          <Route path="agents" element={<Agents />} />
+          <Route path="orchestration" element={<Orchestration />} />
           <Route path="system" element={<SystemHealth />} />
         </Route>
       </Routes>
