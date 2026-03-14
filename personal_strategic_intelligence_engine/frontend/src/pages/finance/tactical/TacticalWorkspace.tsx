@@ -11,6 +11,7 @@ import GovernanceQueuePanel from './GovernanceQueuePanel';
 import PortfolioImpactPanel from './PortfolioImpactPanel';
 import SuppressionFeedPanel from './SuppressionFeedPanel';
 import TacticalPerformancePanel from './TacticalPerformancePanel';
+import TacticalLearningPanel from './TacticalLearningPanel';
 import SignalDetailModal from './SignalDetailModal';
 
 const TacticalWorkspace = () => {
@@ -78,6 +79,10 @@ const TacticalWorkspace = () => {
         
         <div className="grid-performance">
           <TacticalPerformancePanel />
+        </div>
+        
+        <div className="grid-learning">
+          <TacticalLearningPanel />
         </div>
       </div>
 
