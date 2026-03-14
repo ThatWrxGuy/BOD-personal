@@ -6,7 +6,8 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from app.finance_ops.finance_types import Bill, BillStatus, RecurrenceType
+from app.models.finance_ops import Bill
+from app.finance_ops.finance_types import BillStatus, RecurrenceType
 from app.observability import increment
 from app.observability.metrics_service import MetricDomain
 from app.core.logging import get_logger

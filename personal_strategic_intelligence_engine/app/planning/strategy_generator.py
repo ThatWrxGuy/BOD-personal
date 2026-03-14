@@ -4,9 +4,8 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.planning import StrategicPlan, PlanAction
 from app.planning.plan_types import (
-    StrategicPlan,
-    PlanAction,
     PlanType,
     TimeHorizon,
     PlanStatus,

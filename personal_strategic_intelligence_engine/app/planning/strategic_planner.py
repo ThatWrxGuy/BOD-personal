@@ -5,10 +5,8 @@ from typing import Dict, List, Any, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
 from app.planning.plan_types import (
-    StrategicPlan,
-    PlanAction,
-    PlanOutcome,
     PlanStatus,
     ActionStatus,
     PlanType,

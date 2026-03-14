@@ -5,10 +5,10 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.intelligence.trend_analyzer import TrendAnalyzer, get_trend_analyzer
-from app.intelligence.forecasting_engine import ForecastingEngine, get_forecasting_engine
+from app.intelligence.forecasting_engine import ForecastingEngine, get_forecast_engine
 from app.intelligence.scenario_simulator import ScenarioSimulator, get_scenario_simulator
-from app.intelligence.risk_projection_engine import RiskProjectionEngine, get_risk_projection_engine
-from app.intelligence.goal_probability_model import GoalProbabilityModel, get_goal_probability_model
+from app.intelligence.risk_projection_engine import RiskProjector as RiskProjectionEngine, get_risk_projector as get_risk_projection_engine
+from app.intelligence.goal_probability_model import GoalProbabilityEngine as GoalProbabilityModel, get_goal_probability_engine as get_goal_probability_model
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)

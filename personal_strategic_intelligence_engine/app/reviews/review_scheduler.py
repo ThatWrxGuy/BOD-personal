@@ -6,8 +6,8 @@ import asyncio
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.reviews import StrategicReview
 from app.reviews.review_types import (
-    StrategicReview,
     ReviewType,
     ReviewStatus,
     REVIEW_TYPE_CONFIG,

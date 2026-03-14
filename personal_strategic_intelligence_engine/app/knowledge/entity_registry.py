@@ -5,7 +5,8 @@ from typing import Dict, List, Any, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.knowledge.knowledge_types import KnowledgeEntity, EntityType, KnowledgeDomain
+from app.models.knowledge import KnowledgeEntity
+from app.knowledge.knowledge_types import EntityType, KnowledgeDomain
 from app.observability import increment
 from app.observability.metrics_service import MetricDomain
 from app.core.logging import get_logger

@@ -5,10 +5,9 @@ from typing import Dict, List, Any, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.reviews import StrategicReview, ReviewDecisionProposal
+from app.models.strategic_insight import StrategicInsight
 from app.reviews.review_types import (
-    StrategicReview,
-    StrategicInsight,
-    ReviewDecisionProposal,
     ReviewType,
     ReviewStatus,
     REVIEW_TYPE_CONFIG,

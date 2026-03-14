@@ -131,6 +131,7 @@ class Settings(BaseSettings):
     # Observability
     # ===================
     log_level: str = "INFO"
+    log_format: str = "text"
     enable_structured_logging: bool = True
     sentry_dsn: Optional[str] = Field(default=None, validation_alias="SENTRY_DSN")
 

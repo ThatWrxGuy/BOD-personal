@@ -1,4 +1,5 @@
 """Executive Command Center API routes."""
+import json
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Query
@@ -83,7 +84,7 @@ async def execute_command(
     command_type: str = Query(...),
     category: str = Query(...),
     target: Optional[str] = Query(None),
-    parameters: dict = Query({}),
+    parameters: Optional[str] = Query(None, description="JSON string of parameters"),
     issued_by: str = Query("operator"),
     session: AsyncSession = Depends(get_db),
 ):
@@ -93,7 +94,7 @@ async def execute_command(
         command_type=command_type,
         category=CommandCategory(category),
         target=target,
-        parameters=parameters,
+        parameters=json.loads(parameters) if parameters else {},
         issued_by=issued_by,
     )
     

@@ -5,8 +5,8 @@ from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.autonomy import StrategyLoopCycle, LoopPolicy
 from app.autonomy.loop_types import (
-    StrategyLoopCycle,
     CycleStatus,
     CycleTriggerType,
     CycleOutcome,
@@ -27,10 +27,17 @@ class StrategyLoop:
     
     def __init__(self, session: AsyncSession):
         self.session = session
-        self.state_monitor = await get_state_monitor(session)
-        self.change_detector = await get_change_detector()
-        self.strategy_adjuster = await get_strategy_adjuster()
+        self.state_monitor = None
+        self.change_detector = None
+        self.strategy_adjuster = None
         self.last_cycle: Optional[StrategyLoopCycle] = None
+    
+    async def _ensure_initialized(self):
+        """Lazy initialization of dependencies."""
+        if self.state_monitor is None:
+            self.state_monitor = await get_state_monitor(self.session)
+            self.change_detector = await get_change_detector()
+            self.strategy_adjuster = await get_strategy_adjuster()
     
     async def run_cycle(
         self,

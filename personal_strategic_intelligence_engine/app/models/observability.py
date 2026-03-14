@@ -28,7 +28,7 @@ class SystemMetricSnapshot(Base, TimestampMixin):
     
     # Metadata
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    event_metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
     
     __table_args__ = (
         Index("idx_metric_domain_time", "domain", "timestamp"),
@@ -79,7 +79,7 @@ class AlertEvent(Base, TimestampMixin):
     resolved_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     
     # Metadata
-    metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    event_metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
 
 
 # Health component constants

@@ -10,7 +10,6 @@ from app.models.strategic_insight import StrategicInsight
 from app.models.agent_performance import AgentPerformance
 from app.models.strategic_signal import StrategicSignal, SignalCategory
 from app.models.strategic_goal import StrategicGoal, GoalCategory, GoalStatus
-from app.models.strategic_plan import StrategicPlan, PlanStatus
 from app.models.goal_progress import GoalProgress
 from app.models.board_schedule import BoardSchedule, MeetingType
 from app.models.trigger_event import TriggerEvent, TriggerType, TriggerSeverity
@@ -18,7 +17,7 @@ from app.models.forecast_model import ForecastModel, ForecastType
 from app.models.scenario_simulation import ScenarioSimulation
 from app.models.risk_projection import RiskProjection, RiskCategory
 from app.models.goal_probability import GoalProbability
-from app.models.simulation_run import SimulationRun, SimulationEvent, AuditReport
+from app.models.simulation import SimulationRun, SimulationEvent, AuditReport, SimulationScenario, SimulationResult
 from app.models.execution_record import ExecutionRecord, ExecutionHistory, ConnectorStatus
 from app.models.debate import DebateSession, DebateArgument, DebateVote, DebateHistory
 from app.models.learning import DecisionMemory, AgentScorecard, StrategicLesson, StrategicPattern
@@ -27,13 +26,12 @@ from app.models.orchestration import EventRecord, WorkflowInstance, WorkflowStat
 from app.models.identity import User, Role, Permission, AccessAuditLog
 from app.models.security import ConnectorAuditLog, ConnectorConfiguration
 from app.models.observability import SystemMetricSnapshot, HealthStatusRecord, AlertEvent
-from app.models.reviews import StrategicReview, StrategicInsight, ReviewDecisionProposal
+from app.models.reviews import StrategicReview, ReviewDecisionProposal
 from app.models.detection import DetectedEvent
-from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
+from app.models.planning import StrategicPlan, PlanAction, PlanOutcome, PlanStatus
 from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
 from app.models.research import ResearchTask, ResearchReport, ResearchSourceResult
 from app.models.finance_ops import Bill, ExpenseRecord, SubscriptionRecord, CashFlowForecast, LiquidityAlert, AccountBalance
-from app.models.simulation import SimulationRun, SimulationScenario, SimulationResult
 from app.models.chat import ChatSession, ChatMessage
 from app.models.rhythm import DailyPlan, WeeklyPlan, Habit, HabitCompletion, FocusBlock, EnergyPattern
 from app.models.autonomy import StrategyLoopCycle, LoopPolicy

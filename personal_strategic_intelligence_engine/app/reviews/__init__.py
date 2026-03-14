@@ -2,6 +2,7 @@
 
 This module provides autonomous strategic review cycles.
 """
+from app.models.reviews import StrategicReview, ReviewDecisionProposal
 from app.reviews.review_types import (
     ReviewType,
     ReviewStatus,
@@ -17,6 +18,8 @@ __all__ = [
     "ReviewStatus",
     "DomainType",
     "REVIEW_TYPE_CONFIG",
+    "StrategicReview",
+    "ReviewDecisionProposal",
     "ReviewScheduler",
     "get_review_scheduler",
     "StrategicReviewEngine",

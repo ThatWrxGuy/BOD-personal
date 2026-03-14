@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.executive.command_types import OverrideLog, AutonomyOverride
+from app.models.executive import OverrideLog, AutonomyOverride
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)

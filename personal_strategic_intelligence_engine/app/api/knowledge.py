@@ -1,14 +1,14 @@
 """Knowledge graph API routes."""
 import uuid
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.db.session import get_db
 from app.knowledge.knowledge_graph import get_knowledge_graph
-from app.knowledge.knowledge_types import KnowledgeEntity, KnowledgeRelationship
+from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
@@ -111,7 +111,7 @@ async def create_entity(
     entity_type: str = Query(..., description="Entity type"),
     name: str = Query(..., description="Entity name"),
     domain: Optional[str] = Query(None, description="Domain"),
-    attributes: Optional[dict] = Query(None, description="Entity attributes"),
+    attributes: Optional[Dict[str, Any]] = Body(None, description="Entity attributes"),
     session: AsyncSession = Depends(get_db),
 ):
     """Create a new entity."""
@@ -165,10 +165,10 @@ async def create_relationship(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/query")
+@router.post("/query")
 async def execute_query(
     query_type: str = Query(..., description="Query type"),
-    params: Optional[dict] = Query(None, description="Query parameters"),
+    params: Optional[Dict[str, Any]] = Body(None, description="Query parameters"),
     session: AsyncSession = Depends(get_db),
 ):
     """Execute a knowledge graph query."""

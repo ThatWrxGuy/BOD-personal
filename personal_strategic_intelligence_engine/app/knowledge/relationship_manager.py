@@ -6,7 +6,8 @@ from typing import Dict, List, Any, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.knowledge.knowledge_types import KnowledgeRelationship, RelationshipType
+from app.models.knowledge import KnowledgeRelationship
+from app.knowledge.knowledge_types import RelationshipType
 from app.observability import increment
 from app.observability.metrics_service import MetricDomain
 from app.core.logging import get_logger
@@ -33,7 +34,7 @@ class RelationshipManager:
         """Create a new relationship."""
         
         # Validate that entities exist
-        from app.knowledge.knowledge_types import KnowledgeEntity
+        from app.models.knowledge import KnowledgeEntity
         
         source_result = await self.session.execute(
             select(KnowledgeEntity).where(KnowledgeEntity.id == source_entity_id)

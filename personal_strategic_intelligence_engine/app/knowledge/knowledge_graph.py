@@ -6,7 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.knowledge.entity_registry import get_entity_registry
 from app.knowledge.relationship_manager import get_relationship_manager
-from app.knowledge.knowledge_types import EntityType, RelationshipType, KnowledgeEntity, KnowledgeRelationship, KnowledgeDomain
+from app.models.knowledge import KnowledgeEntity, KnowledgeRelationship
+from app.knowledge.knowledge_types import EntityType, RelationshipType, KnowledgeDomain
 from app.observability import increment
 from app.observability.metrics_service import MetricDomain
 from app.core.logging import get_logger

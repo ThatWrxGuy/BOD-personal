@@ -14,6 +14,7 @@ class StrategicReview(Base, TimestampMixin):
     """Strategic review record."""
 
     __tablename__ = "strategic_reviews"
+    __table_args__ = {"extend_existing": True}
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -43,37 +44,6 @@ class StrategicReview(Base, TimestampMixin):
     
     # Error tracking
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-
-
-class StrategicInsight(Base, TimestampMixin):
-    """Strategic insight generated from reviews."""
-
-    __tablename__ = "strategic_insights"
-
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-    )
-    
-    review_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("strategic_reviews.id", ondelete="CASCADE"),
-        nullable=False,
-    )
-    
-    domain: Mapped[str] = mapped_column(String(50), nullable=False)
-    insight_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
-    confidence_score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    
-    # Priority
-    priority: Mapped[str] = mapped_column(String(20), default="medium")
-    
-    # Status
-    status: Mapped[str] = mapped_column(String(20), default="active")
 
 
 class ReviewDecisionProposal(Base, TimestampMixin):

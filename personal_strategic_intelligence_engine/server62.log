@@ -1,0 +1,211 @@
+INFO:     Started server process [29197]
+INFO:     Waiting for application startup.
+2026-03-13 23:10:04,508 - app.main - INFO - Starting Personal Strategic Intelligence Engine v1.0.0
+2026-03-13 23:10:04,508 - app.core.config_validation - INFO - Execution is disabled - safe mode active
+2026-03-13 23:10:04,508 - app.core.config_validation - INFO - Background workers are disabled
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: DATABASE_URL appears to be using localhost. Ensure PostgreSQL is running locally or configure a remote database.
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: Email connector is disabled (ENABLE_EMAIL_CONNECTOR=false)
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: Calendar connector is disabled (ENABLE_CALENDAR_CONNECTOR=false)
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: Todoist connector is disabled (ENABLE_TODOIST_CONNECTOR=false)
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: Notion connector is disabled (ENABLE_NOTION_CONNECTOR=false)
+2026-03-13 23:10:04,508 - app.core.config_validation - WARNING - Config warning: Financial connector is disabled (ENABLE_FINANCIAL_CONNECTOR=false)
+2026-03-13 23:10:04,508 - app.core.config_validation - ERROR - Configuration validation failed:
+  - SECRET_KEY is using the default insecure value. Please set a strong secret key in production.
+2026-03-13 23:10:04,508 - app.main - ERROR - Configuration validation failed: Configuration validation failed:
+  - SECRET_KEY is using the default insecure value. Please set a strong secret key in production.
+ERROR:    Traceback (most recent call last):
+  File "/home/openhands/.local/lib/python3.12/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/openhands/.local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/project/BOD-personal/personal_strategic_intelligence_engine/app/main.py", line 60, in lifespan
+    report = get_readiness_report()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/project/BOD-personal/personal_strategic_intelligence_engine/app/core/config_check.py", line 281, in get_readiness_report
+    return checker.get_readiness_report()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/project/BOD-personal/personal_strategic_intelligence_engine/app/core/config_check.py", line 32, in get_readiness_report
+    "core": self._check_core(),
+            ^^^^^^^^^^^^^^^^^^
+  File "/workspace/project/BOD-personal/personal_strategic_intelligence_engine/app/core/config_check.py", line 79, in _check_core
+    "status": ReadinessStatus.WARNING if issues else ReadinessStatus.READY,
+              ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ReadinessStatus' has no attribute 'WARNING'
+
+ERROR:    Application startup failed. Exiting.

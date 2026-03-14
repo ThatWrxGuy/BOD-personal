@@ -1,7 +1,7 @@
 """Memory layer for meeting storage and retrieval."""
 import json
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from sqlalchemy import select, desc, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -55,7 +55,7 @@ class MeetingMemory:
         limit: int = 50,
         offset: int = 0,
         meeting_type: Optional[str] = None,
-    ) -> tuple[list[BoardMeeting], int]:
+    ) -> Tuple[List[BoardMeeting], int]:
         """List meetings with pagination."""
         query = select(BoardMeeting).order_by(desc(BoardMeeting.created_at))
         
@@ -116,7 +116,7 @@ class MeetingMemory:
         self,
         limit: int = 5,
         meeting_type: Optional[str] = None,
-    ) -> list[BoardMeeting]:
+    ) -> List[BoardMeeting]:
         """Get recent meetings for context."""
         query = select(BoardMeeting).order_by(desc(BoardMeeting.created_at))
         
@@ -132,7 +132,7 @@ class MeetingMemory:
         self,
         keyword: str,
         limit: int = 10,
-    ) -> list[BoardMeeting]:
+    ) -> List[BoardMeeting]:
         """Search meetings by keyword in question."""
         query = (
             select(BoardMeeting)

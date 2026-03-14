@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, date
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Float, ForeignKey, Index, Boolean
+from sqlalchemy import DateTime, String, Float, ForeignKey, Date, Index, Boolean
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -25,7 +25,7 @@ class Bill(Base, TimestampMixin):
     category: Mapped[str] = mapped_column(String(50), nullable=False)
     amount: Mapped[float] = mapped_column(Float, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="USD")
-    due_date: Mapped[date] = mapped_column(nullable=False)
+    due_date: Mapped[date] = mapped_column(Date, nullable=False)
     recurrence: Mapped[str] = mapped_column(String(20), default="one_time")
     status: Mapped[str] = mapped_column(String(20), default="pending")
     autopay_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -51,7 +51,7 @@ class ExpenseRecord(Base, TimestampMixin):
     currency: Mapped[str] = mapped_column(String(3), default="USD")
     merchant: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     description: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    transaction_date: Mapped[date] = mapped_column(nullable=False)
+    transaction_date: Mapped[date] = mapped_column(Date, nullable=False)
     is_recurring: Mapped[bool] = mapped_column(Boolean, default=False)
     bill_id: Mapped[Optional[uuid.UUID]] = mapped_column(UUID(as_uuid=True), nullable=True)
 
@@ -75,7 +75,7 @@ class SubscriptionRecord(Base, TimestampMixin):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_essential: Mapped[bool] = mapped_column(Boolean, default=False)
     usage_frequency: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    last_used: Mapped[Optional[date]] = mapped_column(nullable=True)
+    last_used: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
 
@@ -90,7 +90,7 @@ class CashFlowForecast(Base, TimestampMixin):
         default=uuid.uuid4,
     )
     
-    forecast_date: Mapped[date] = mapped_column(nullable=False)
+    forecast_date: Mapped[date] = mapped_column(Date, nullable=False)
     projected_balance: Mapped[float] = mapped_column(Float, nullable=False)
     time_horizon_days: Mapped[int] = mapped_column(default=30)
     projected_income: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
@@ -112,7 +112,7 @@ class LiquidityAlert(Base, TimestampMixin):
     alert_type: Mapped[str] = mapped_column(String(50), nullable=False)
     severity: Mapped[str] = mapped_column(String(20), default="medium")
     message: Mapped[str] = mapped_column(String(500), nullable=False)
-    projected_date: Mapped[Optional[date]] = mapped_column(nullable=True)
+    projected_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     projected_balance: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     is_resolved: Mapped[bool] = mapped_column(Boolean, default=False)
     resolved_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -133,5 +133,5 @@ class AccountBalance(Base, TimestampMixin):
     account_type: Mapped[str] = mapped_column(String(50), nullable=False)
     balance: Mapped[float] = mapped_column(Float, nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="USD")
-    as_of_date: Mapped[date] = mapped_column(nullable=False)
+    as_of_date: Mapped[date] = mapped_column(Date, nullable=False)
     is_estimated: Mapped[bool] = mapped_column(Boolean, default=False)

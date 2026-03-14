@@ -1,9 +1,15 @@
-"""Strategic Audit Module.
+"""Strategic Audit - DEPRECATED
 
-Provides end-to-end strategic audit and reporting.
+This module is deprecated. All functionality has been moved to app/audit/.
+Please update imports to use app.audit instead.
+
+Migration:
+  - from app.strategic_audit.audit_models -> from app.audit.strategic.audit_models
+  - from app.strategic_audit.audit_cycle_runner -> from app.audit.strategic.audit_cycle_runner
+  - from app.strategic_audit.intelligence_metrics_calculator -> from app.audit.strategic.intelligence_metrics_calculator
 """
-from app.strategic_audit.audit_models import (
-    AuditSummary,
+# Backward compatibility re-exports
+from app.audit.strategic.audit_models import (
     AuditSummary,
     CycleAuditRecord,
     DecisionRecord,
@@ -15,26 +21,16 @@ from app.strategic_audit.audit_models import (
     StrategicBehaviorScore,
     StrategicIntelligenceMetrics,
     TimeHorizon,
-    LIVE_EXECUTION_ENABLED,
-    AUDIT_MODE,
 )
-from app.strategic_audit.audit_cycle_runner import (
-    AuditCycleRunner,
-    create_audit_cycle_runner,
-)
-from app.strategic_audit.intelligence_metrics_calculator import (
-    IntelligenceMetricsCalculator,
-    create_intelligence_metrics_calculator,
-)
-from app.strategic_audit.audit_report_builder import (
-    AuditReportBuilder,
-    create_audit_report_builder,
-)
+
+from app.audit.strategic.audit_cycle_runner import AuditCycleRunner
+
+from app.audit.strategic.intelligence_metrics_calculator import IntelligenceMetricsCalculator
 
 __all__ = [
     # Models
     "AuditSummary",
-    "CycleAuditRecord",
+    "CycleAuditRecord", 
     "DecisionRecord",
     "GovernanceOutcome",
     "LearningUpdate",
@@ -44,14 +40,8 @@ __all__ = [
     "StrategicBehaviorScore",
     "StrategicIntelligenceMetrics",
     "TimeHorizon",
-    # Safety
-    "LIVE_EXECUTION_ENABLED",
-    "AUDIT_MODE",
-    # Components
+    # Runners
     "AuditCycleRunner",
-    "create_audit_cycle_runner",
+    # Calculators
     "IntelligenceMetricsCalculator",
-    "create_intelligence_metrics_calculator",
-    "AuditReportBuilder",
-    "create_audit_report_builder",
 ]

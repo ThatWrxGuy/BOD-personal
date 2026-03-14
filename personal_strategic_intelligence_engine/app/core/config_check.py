@@ -17,6 +17,7 @@ class ReadinessStatus(str, Enum):
     DISABLED = "DISABLED"
     MISSING = "MISSING"
     UNSAFE = "UNSAFE"
+    WARNING = "WARNING"
 
 
 class ConfigChecker:

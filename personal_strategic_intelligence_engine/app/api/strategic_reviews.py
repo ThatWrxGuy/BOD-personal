@@ -9,10 +9,9 @@ from sqlalchemy import select, desc
 from app.db.session import get_db
 from app.reviews.strategic_review_engine import get_strategic_review_engine
 from app.reviews.review_scheduler import get_review_scheduler
+from app.models.reviews import StrategicReview, ReviewDecisionProposal
+from app.models.strategic_insight import StrategicInsight
 from app.reviews.review_types import (
-    StrategicReview,
-    StrategicInsight,
-    ReviewDecisionProposal,
     ReviewType,
     REVIEW_TYPE_CONFIG,
 )

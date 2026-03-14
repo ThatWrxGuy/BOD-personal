@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, date, time
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Float, ForeignKey, Time, Boolean
+from sqlalchemy import DateTime, String, Float, ForeignKey, Time, Boolean, Date
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -21,7 +21,7 @@ class DailyPlan(Base, TimestampMixin):
         default=uuid.uuid4,
     )
     
-    plan_date: Mapped[date] = mapped_column(nullable=False)
+    plan_date: Mapped[date] = mapped_column(Date, nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending")
     strategic_priorities: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
     tasks: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
@@ -42,7 +42,7 @@ class WeeklyPlan(Base, TimestampMixin):
         default=uuid.uuid4,
     )
     
-    week_start: Mapped[date] = mapped_column(nullable=False)
+    week_start: Mapped[date] = mapped_column(Date, nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending")
     top_priorities: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
     focus_themes: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
@@ -90,7 +90,7 @@ class HabitCompletion(Base, TimestampMixin):
         nullable=False,
     )
     
-    completed_date: Mapped[date] = mapped_column(nullable=False)
+    completed_date: Mapped[date] = mapped_column(Date, nullable=False)
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
@@ -106,7 +106,7 @@ class FocusBlock(Base, TimestampMixin):
         default=uuid.uuid4,
     )
     
-    date: Mapped[date] = mapped_column(nullable=False)
+    date: Mapped[date] = mapped_column(Date, nullable=False)
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
     end_time: Mapped[time] = mapped_column(Time, nullable=False)
     block_type: Mapped[str] = mapped_column(String(20), default="deep_work")

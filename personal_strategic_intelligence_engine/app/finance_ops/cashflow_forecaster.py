@@ -6,14 +6,13 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.finance_ops.finance_types import (
+from app.models.finance_ops import (
     CashFlowForecast,
     LiquidityAlert,
     AccountBalance,
-    AlertSeverity,
     Bill,
-    BillStatus,
 )
+from app.finance_ops.finance_types import AlertSeverity, BillStatus
 from app.finance_ops.bill_registry import get_bill_registry
 from app.finance_ops.expense_tracker import get_expense_tracker
 from app.observability import increment
@@ -248,7 +247,7 @@ class SubscriptionDetector:
     async def get_subscription_summary(self) -> Dict[str, Any]:
         """Get subscription summary."""
         
-        from app.finance_ops.finance_types import SubscriptionRecord
+        from app.models.finance_ops import SubscriptionRecord
         
         result = await self.session.execute(
             select(SubscriptionRecord).where(SubscriptionRecord.is_active == True)

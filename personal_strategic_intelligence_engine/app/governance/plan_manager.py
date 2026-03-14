@@ -6,7 +6,7 @@ from typing import Optional
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.strategic_plan import StrategicPlan, PlanStatus
+from app.models.planning import StrategicPlan, PlanStatus
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)

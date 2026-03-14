@@ -2,12 +2,11 @@
 
 This module provides conversational strategic interface capabilities.
 """
+from app.models.chat import ChatSession, ChatMessage
 from app.chat.chat_types import (
     IntentType,
     ChatSessionStatus,
     ChatMessageStatus,
-    ChatSession,
-    ChatMessage,
 )
 from app.chat.intent_classifier import IntentClassifier, get_intent_classifier
 from app.chat.command_interpreter import CommandInterpreter, get_command_interpreter

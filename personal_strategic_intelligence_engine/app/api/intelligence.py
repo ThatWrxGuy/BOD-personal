@@ -17,8 +17,8 @@ from app.schemas.intelligence import (
 from app.services.governance_service import GovernanceService
 from app.intelligence.intelligence_service import IntelligenceService
 from app.intelligence.forecasting_engine import ForecastingEngine
-from app.intelligence.risk_projection_engine import RiskProjectionEngine
-from app.intelligence.goal_probability_model import GoalProbabilityModel
+from app.intelligence.risk_projection_engine import RiskProjector as RiskProjectionEngine
+from app.intelligence.goal_probability_model import GoalProbabilityEngine as GoalProbabilityModel
 from app.intelligence.trend_analyzer import TrendAnalyzer
 from app.core.logging import get_logger
 
@@ -124,7 +124,7 @@ async def get_goal_probability(
 ):
     """Get probability for a specific goal."""
     import uuid
-    from app.intelligence.goal_probability_model import GoalProbabilityModel
+    from app.intelligence.goal_probability_model import GoalProbabilityEngine as GoalProbabilityModel
     
     model = GoalProbabilityModel(session)
     try:

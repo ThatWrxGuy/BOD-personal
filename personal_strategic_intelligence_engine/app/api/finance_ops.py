@@ -15,7 +15,7 @@ from app.finance_ops.cashflow_forecaster import (
     get_subscription_detector,
 )
 from app.finance_ops.financial_operations_engine import get_financial_operations_engine
-from app.finance_ops.finance_types import Bill, SubscriptionRecord
+from app.models.finance_ops import Bill, SubscriptionRecord
 
 router = APIRouter(prefix="/finance-ops", tags=["finance-ops"])
 

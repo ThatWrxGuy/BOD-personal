@@ -2,13 +2,13 @@
 
 This module provides autonomous strategic adaptation capabilities.
 """
+from app.models.autonomy import StrategyLoopCycle, LoopPolicy
 from app.autonomy.loop_types import (
     ChangeSeverity,
     ChangeCategory,
     AdjustmentType,
     CycleTriggerType,
     CycleStatus,
-    StrategyLoopCycle,
 )
 from app.autonomy.strategy_loop import StrategyLoop, get_strategy_loop
 from app.autonomy.state_monitor import StateMonitor, get_state_monitor
@@ -23,6 +23,7 @@ __all__ = [
     "CycleTriggerType",
     "CycleStatus",
     "StrategyLoopCycle",
+    "LoopPolicy",
     "StrategyLoop",
     "get_strategy_loop",
     "StateMonitor",

@@ -171,7 +171,7 @@ class CommandCenter:
         logger.info(f"Executing command: {command.command_type}")
         
         # Log command
-        from app.executive.command_types import ExecutiveCommandLog
+        from app.models.executive import ExecutiveCommandLog
         
         log = ExecutiveCommandLog(
             command_id=command.command_id,
@@ -298,7 +298,7 @@ class CommandCenter:
         
         try:
             from sqlalchemy import select
-            from app.executive.command_types import AutonomyOverride
+            from app.models.executive import AutonomyOverride
             
             result = await self.session.execute(
                 select(AutonomyOverride)

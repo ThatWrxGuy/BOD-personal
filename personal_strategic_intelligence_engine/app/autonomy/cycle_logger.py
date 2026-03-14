@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.autonomy.loop_types import StrategyLoopCycle
+from app.models.autonomy import StrategyLoopCycle
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)

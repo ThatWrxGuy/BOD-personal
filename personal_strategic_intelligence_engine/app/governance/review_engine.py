@@ -6,7 +6,7 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.strategic_goal import StrategicGoal
-from app.models.strategic_plan import StrategicPlan
+from app.models.planning import StrategicPlan
 from app.models.board_meeting import BoardMeeting
 from app.governance.goal_tracker import GoalTracker
 from app.governance.plan_manager import PlanManager

@@ -1,7 +1,7 @@
 """Memory layer for decision storage and retrieval."""
 import json
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from sqlalchemy import select, desc, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -55,7 +55,7 @@ class DecisionMemory:
         limit: int = 50,
         offset: int = 0,
         status: Optional[str] = None,
-    ) -> tuple[list[DecisionRecord], int]:
+    ) -> Tuple[List[DecisionRecord], int]:
         """List decisions with pagination."""
         query = select(DecisionRecord).order_by(desc(DecisionRecord.created_at))
         
@@ -105,7 +105,7 @@ class DecisionMemory:
         
         return decision
 
-    async def get_by_meeting(self, meeting_id: int) -> list[DecisionRecord]:
+    async def get_by_meeting(self, meeting_id: int) -> List[DecisionRecord]:
         """Get decisions linked to a meeting."""
         result = await self.session.execute(
             select(DecisionRecord)
@@ -114,7 +114,7 @@ class DecisionMemory:
         )
         return list(result.scalars().all())
 
-    async def get_pending_reviews(self) -> list[DecisionRecord]:
+    async def get_pending_reviews(self) -> List[DecisionRecord]:
         """Get decisions pending review."""
         from datetime import datetime
         result = await self.session.execute(
@@ -172,7 +172,7 @@ class ReviewMemory:
         decision_id: Optional[int] = None,
         limit: int = 50,
         offset: int = 0,
-    ) -> tuple[list[OutcomeReview], int]:
+    ) -> Tuple[List[OutcomeReview], int]:
         """List reviews with optional filtering."""
         query = select(OutcomeReview).order_by(desc(OutcomeReview.created_at))
         

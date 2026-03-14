@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import DateTime, String, Float, ForeignKey
+from sqlalchemy import DateTime, String, Float, Integer, Text, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -104,3 +104,47 @@ class SimulationResult(Base, TimestampMixin):
     risk_factors: Mapped[Optional[list]] = mapped_column(JSONB, nullable=True)
     
     details: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+
+
+class SimulationEvent(Base, TimestampMixin):
+    """Simulation event model."""
+
+    __tablename__ = "simulation_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    simulation_run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        nullable=False,
+    )
+    event_day: Mapped[int] = mapped_column(Integer, nullable=False)
+    event_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    # SIGNAL, TRIGGER, MEETING, DECISION, FORECAST, GOAL_UPDATE, ALERT, FAILURE
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    component: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    severity: Mapped[str] = mapped_column(String(20), default="info")
+
+
+class AuditReport(Base, TimestampMixin):
+    """Audit report for simulations."""
+
+    __tablename__ = "audit_reports"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    simulation_run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        nullable=False,
+    )
+    audit_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    findings: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    recommendations: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    severity: Mapped[str] = mapped_column(String(20), default="info")

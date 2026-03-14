@@ -35,7 +35,7 @@ class StrategicSignal(Base, TimestampMixin):
     signal_strength: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)  # 0-10
     urgency: Mapped[int] = mapped_column(Integer, nullable=False, default=5)  # 1-10
     confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.5)  # 0-1
-    metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
+    signal_metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
     
     # Processed fields
     processed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -5,10 +5,12 @@ from typing import Dict, List, Any, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.research.research_types import (
+from app.models.research import (
     ResearchTask,
     ResearchReport,
     ResearchSourceResult,
+)
+from app.research.research_types import (
     ResearchStatus,
     ResearchPriority,
     ResearchScope,

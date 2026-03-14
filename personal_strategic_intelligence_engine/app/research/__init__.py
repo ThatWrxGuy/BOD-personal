@@ -2,13 +2,11 @@
 
 This module provides autonomous research capabilities.
 """
+from app.models.research import ResearchTask, ResearchReport, ResearchSourceResult
 from app.research.research_types import (
     ResearchStatus,
     ResearchPriority,
     ResearchScope,
-    ResearchTask,
-    ResearchReport,
-    ResearchSourceResult,
 )
 from app.research.research_engine import ResearchEngine, get_research_engine
 from app.research.research_sources import ResearchSourceManager, get_source_manager

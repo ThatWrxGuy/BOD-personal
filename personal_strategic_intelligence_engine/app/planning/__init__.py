@@ -2,14 +2,12 @@
 
 This module provides cross-domain strategic planning capabilities.
 """
+from app.models.planning import StrategicPlan, PlanAction, PlanOutcome
 from app.planning.plan_types import (
     PlanType,
     TimeHorizon,
     PlanStatus,
     ActionStatus,
-    StrategicPlan,
-    PlanAction,
-    PlanOutcome,
 )
 from app.planning.strategic_planner import StrategicPlanner, get_strategic_planner
 from app.planning.strategy_generator import StrategyGenerator, get_strategy_generator

@@ -76,7 +76,6 @@ class WorkflowInstance(Base, TimestampMixin):
     # Indexes
     __table_args__ = (
         Index("idx_workflow_status", "status", "created_at"),
-        Index("idx_workflow_correlation", "workflow_id", "correlation_id"),
     )
 
 
@@ -100,4 +99,4 @@ class WorkflowStateTransition(Base):
     to_state: Mapped[str] = mapped_column(String(50), nullable=False)
     trigger_event: Mapped[str] = mapped_column(String(50), nullable=True)
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    metadata: Mapped[dict] = mapped_column(JSONB, nullable=True)
+    task_metadata: Mapped[dict] = mapped_column(JSONB, nullable=True)

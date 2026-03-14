@@ -1,7 +1,8 @@
 """Simulation API routes."""
+import uuid
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
@@ -132,7 +133,7 @@ async def get_events(
     """Get simulation events for a run."""
     import uuid
     from sqlalchemy import select
-    from app.models.simulation_run import SimulationEvent
+    from app.models.simulation import SimulationEvent
     
     try:
         run_uuid = uuid.UUID(run_id)
@@ -199,7 +200,7 @@ async def list_strategic_simulations(
 async def run_strategic_simulation(
     decision_type: str = Query(..., description="Decision type: investment, spending, workload, expense, goal_timeline"),
     decision_description: Optional[str] = Query(None),
-    decision_params: Optional[dict] = Query(None),
+    decision_params: Optional[dict] = Body(None),
     time_horizon_days: int = Query(90, ge=1, le=1825),
     domain: str = Query("financial"),
     session: AsyncSession = Depends(get_db),
