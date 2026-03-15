@@ -19,6 +19,7 @@ from app.agents.finance.tactical.execution_timing.routes import router as execut
 from app.intelligence.evolution.routes import router as evolution_router
 from app.intelligence.strategy_simulation.routes import router as strategy_simulation_router
 from app.finance.options_intelligence.routes import router as options_intelligence_router
+from app.intelligence_bus.routes import router as intelligence_bus_router
 from app.identity.auth_middleware import AuthMiddleware
 from app.db.init_db import init_db, seed_agents
 
@@ -151,6 +152,7 @@ def create_app() -> FastAPI:
     app.include_router(evolution_router)
     app.include_router(strategy_simulation_router)
     app.include_router(options_intelligence_router)
+    app.include_router(intelligence_bus_router)
 
     return app
 
