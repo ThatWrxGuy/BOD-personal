@@ -9,6 +9,9 @@ from app.core.config_validation import validate_and_raise
 from app.core.config_check import get_readiness_report
 from app.core.logging import setup_logging, get_logger
 from app.api import profile, board, decisions, reviews, health, signals, governance, intelligence, simulation, execution, debate, learning, kernel, orchestration, identity, security, observability, strategic_reviews, detection, planning, knowledge, research, finance_ops, rhythm, autonomy, executive, optimization
+from app.strategy_pipeline.routes import router as strategy_pipeline_router
+from app.execution_engine.routes import router as execution_engine_router
+from app.learning_engine.routes import router as learning_engine_router
 from app.finance.api import finance_router
 from app.finance.intelligence.api import intelligence_router
 from app.finance.simulation.api import simulation_router
@@ -157,6 +160,9 @@ def create_app() -> FastAPI:
     app.include_router(intelligence_bus_router)
     app.include_router(alpha_engine_router)
     app.include_router(strategy_lab_router)
+    app.include_router(strategy_pipeline_router)
+    app.include_router(execution_engine_router)
+    app.include_router(learning_engine_router)
 
     return app
 
