@@ -236,3 +236,38 @@ async def list_all_reports():
         {"id": "eod-report", "name": "EOD Report", "classification": "advisory"},
     ]
     return success_response({"reports": reports, "total": len(reports)})
+
+
+@router.get("/reports/advisory")
+async def get_advisory_reports():
+    """Get all advisory reports in one call (V47-007)."""
+    generator = get_report_generator()
+    
+    return success_response({
+        "executive_brief": generator.generate_executive_brief(),
+        "execution_status": generator.generate_execution_status(),
+        "learning_report": generator.generate_learning_report(),
+        "eod_report": generator.generate_eod_report(),
+    })
+
+
+@router.get("/reports/decision-required")
+async def get_decision_required_reports():
+    """Get all reports requiring decision (V47-007)."""
+    generator = get_report_generator()
+    
+    return success_response({
+        "strategy_proposals": generator.generate_strategy_proposals(),
+        "governance_queue": generator.generate_governance_queue(),
+    })
+
+
+@router.get("/reports/review-required")
+async def get_review_required_reports():
+    """Get all reports requiring review (V47-007)."""
+    generator = get_report_generator()
+    
+    return success_response({
+        "financial_intelligence": generator.generate_financial_intelligence(),
+        "options_intelligence": generator.generate_options_intelligence(),
+    })
