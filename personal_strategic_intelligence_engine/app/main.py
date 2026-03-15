@@ -15,6 +15,7 @@ from app.learning_engine.routes import router as learning_engine_router
 from app.executive_dashboard.routes import router as executive_dashboard_router
 from app.system_audit.routes import router as system_audit_router
 from app.system_outputs.routes import router as system_outputs_router
+from app.core.canonical_routes_api import router as canonical_routes_api
 from app.finance.api import finance_router
 from app.finance.intelligence.api import intelligence_router
 from app.finance.simulation.api import simulation_router
@@ -169,6 +170,7 @@ def create_app() -> FastAPI:
     app.include_router(executive_dashboard_router)
     app.include_router(system_audit_router)
     app.include_router(system_outputs_router)
+    app.include_router(canonical_routes_api)
 
     return app
 
