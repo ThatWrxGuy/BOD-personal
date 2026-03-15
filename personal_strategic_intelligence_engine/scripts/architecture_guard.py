@@ -7,6 +7,7 @@ This script checks for:
 - Duplicate subsystem creation
 - Legacy simulation imports in active code
 - Versioned/temporary module naming violations
+- Agent layer canonical structure
 """
 import os
 import re
@@ -41,6 +42,31 @@ LAYERS = {
     "orchestration": ["app/orchestration"],
     "api": ["app/api", "app/executive"],
 }
+
+# Agent layer canonical paths
+CANONICAL_AGENT_FILES = {
+    "app/agents/base_agent.py": "BaseAgent abstract class",
+    "app/agents/registry.py": "AgentRegistry",
+    "app/agents/domain/strategy_agent.py": "StrategyAgent",
+    "app/agents/domain/finance_agent.py": "FinanceAgent",
+    "app/agents/domain/risk_agent.py": "RiskAgent",
+    "app/agents/domain/health_agent.py": "HealthAgent",
+    "app/agents/domain/operations_agent.py": "OperationsAgent",
+    "app/agents/domain/legacy_agent.py": "LegacyAgent",
+    "app/agents/executive/agent_council.py": "AgentCouncil",
+    "app/agents/toolkits/registry.py": "ToolkitRegistry",
+    "app/agents/toolkits/resolver.py": "ToolkitResolver",
+    "app/agents/toolkits/base.py": "BaseToolkit",
+    "app/agents/toolkits/agent_profile.py": "AgentProfile",
+}
+
+# Obsolete/non-canonical agent paths that should NOT exist
+OBSOLETE_AGENT_PATHS = [
+    "app/agents/agent_base.py",      # Use base_agent.py
+    "app/agents/agent_registry.py",  # Use registry.py
+    "app/agents/agent_context.py",   # Not implemented
+    "app/agents/agent_router.py",    # Use resolver.py
+]
 
 # Forbidden imports - active code should not import from these legacy paths
 LEGACY_SIMULATION_PATHS = [
@@ -345,6 +371,106 @@ def check_versioned_files(root_dir: str = "app") -> List[Dict[str, str]]:
     return violations
 
 
+def check_agent_layer() -> Dict[str, any]:
+    """Check agent layer canonical structure."""
+    findings = {
+        "missing_canonical": [],
+        "obsolete_found": [],
+        "status": "PASS",
+    }
+    
+    # Check for missing canonical files
+    for canonical_path, description in CANONICAL_AGENT_FILES.items():
+        if not os.path.exists(canonical_path):
+            findings["missing_canonical"].append({
+                "file": canonical_path,
+                "description": description,
+                "severity": "HIGH",
+            })
+            findings["status"] = "FAIL"
+    
+    # Check for obsolete paths that should NOT exist
+    for obsolete_path in OBSOLETE_AGENT_PATHS:
+        if os.path.exists(obsolete_path):
+            findings["obsolete_found"].append({
+                "file": obsolete_path,
+                "severity": "HIGH",
+                "message": f"Obsolete agent path found, use canonical alternative",
+            })
+            findings["status"] = "FAIL"
+    
+    return findings
+
+
+def check_agent_imports() -> List[Dict]:
+    """Check for non-canonical imports in agent files."""
+    violations = []
+    
+    # Check domain agent files for proper imports
+    domain_agents = [
+        "app/agents/domain/strategy_agent.py",
+        "app/agents/domain/finance_agent.py",
+        "app/agents/domain/risk_agent.py",
+    ]
+    
+    for agent_file in domain_agents:
+        if not os.path.exists(agent_file):
+            continue
+            
+        with open(agent_file, 'r') as f:
+            content = f.read()
+            
+        # Check for obsolete import patterns
+        if "from app.agents.agent_base" in content:
+            violations.append({
+                "file": agent_file,
+                "import": "app.agents.agent_base",
+                "severity": "HIGH",
+                "message": "Use 'from app.agents.base_agent import BaseAgent' instead",
+            })
+        
+        if "from app.agents.agent_registry" in content:
+            violations.append({
+                "file": agent_file,
+                "import": "app.agents.agent_registry", 
+                "severity": "HIGH",
+                "message": "Use 'from app.agents.registry import AgentRegistry' instead",
+            })
+    
+    return violations
+
+
 if __name__ == "__main__":
+    # Run agent layer check first
+    print("=" * 60)
+    print("AGENT LAYER CANONICAL CHECK")
+    print("=" * 60)
+    
+    agent_findings = check_agent_layer()
+    
+    if agent_findings["missing_canonical"]:
+        print("\n--- MISSING CANONICAL FILES ---")
+        for m in agent_findings["missing_canonical"]:
+            print(f"  [{m['severity']}] {m['file']}: {m['description']}")
+    
+    if agent_findings["obsolete_found"]:
+        print("\n--- OBSOLETE PATHS FOUND ---")
+        for o in agent_findings["obsolete_found"]:
+            print(f"  [{o['severity']}] {o['file']}: {o['message']}")
+    
+    print(f"\nAgent Layer Status: {agent_findings['status']}")
+    
+    # Check agent imports
+    import_violations = check_agent_imports()
+    if import_violations:
+        print("\n--- AGENT IMPORT VIOLATIONS ---")
+        for v in import_violations:
+            print(f"  File: {v['file']}")
+            print(f"    {v['message']}")
+    
+    print("\n" + "=" * 60)
+    print("ARCHITECTURE GUARD REPORT")
+    print("=" * 60)
+    
     report = run_architecture_check()
     print_report(report)
