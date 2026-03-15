@@ -1,0 +1,26 @@
+INFO:     Started server process [33557]
+INFO:     Waiting for application startup.
+2026-03-13 23:32:26,272 - app.main - INFO - Starting Personal Strategic Intelligence Engine v1.0.0
+2026-03-13 23:32:26,272 - app.core.config_validation - INFO - Execution is disabled - safe mode active
+2026-03-13 23:32:26,272 - app.core.config_validation - INFO - Background workers are disabled
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: DATABASE_URL appears to be using localhost. Ensure PostgreSQL is running locally or configure a remote database.
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: Email connector is disabled (ENABLE_EMAIL_CONNECTOR=false)
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: Calendar connector is disabled (ENABLE_CALENDAR_CONNECTOR=false)
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: Todoist connector is disabled (ENABLE_TODOIST_CONNECTOR=false)
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: Notion connector is disabled (ENABLE_NOTION_CONNECTOR=false)
+2026-03-13 23:32:26,272 - app.core.config_validation - WARNING - Config warning: Financial connector is disabled (ENABLE_FINANCIAL_CONNECTOR=false)
+2026-03-13 23:32:26,272 - app.core.config_validation - ERROR - Configuration validation failed:
+  - SECRET_KEY is using the default insecure value. Please set a strong secret key in production.
+2026-03-13 23:32:26,272 - app.main - ERROR - Configuration validation failed: Configuration validation failed:
+  - SECRET_KEY is using the default insecure value. Please set a strong secret key in production.
+2026-03-13 23:32:26,272 - app.main - INFO - System readiness: ReadinessStatus.READY
+2026-03-13 23:32:26,272 - app.db.init_db - INFO - Creating database tables...
+2026-03-13 23:32:26,275 - app.main - WARNING - Database initialization skipped: Multiple exceptions: [Errno 111] Connection refused, [Errno 99] Cannot assign requested address
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:48358 - "GET /health HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-03-13 23:32:42,821 - app.main - INFO - Shutting down application
+INFO:     Application shutdown complete.
+INFO:     Finished server process [33557]

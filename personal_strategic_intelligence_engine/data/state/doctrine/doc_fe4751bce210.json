@@ -1,0 +1,10 @@
+{
+  "doctrine_id": "doc_fe4751bce210",
+  "strategic_rule": "Test doctrine",
+  "supporting_evidence": [],
+  "confidence_level": 0.5,
+  "origin_cycle": "test_cycle",
+  "created_at": "2026-03-12 16:16:31.588164",
+  "updated_at": "2026-03-12 16:16:31.588166",
+  "is_active": true
+}

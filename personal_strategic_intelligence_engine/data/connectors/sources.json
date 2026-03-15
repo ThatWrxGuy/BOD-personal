@@ -1,0 +1,54 @@
+{
+  "calendar": {
+    "name": "calendar",
+    "connector_type": "calendar",
+    "status": "inactive",
+    "enabled": false,
+    "config": {},
+    "credentials": {},
+    "interval_seconds": 300,
+    "created_at": "2026-03-13 18:02:11.486343",
+    "updated_at": "2026-03-13 18:02:11.486351",
+    "last_sync": null,
+    "last_success": null
+  },
+  "finance": {
+    "name": "finance",
+    "connector_type": "finance",
+    "status": "inactive",
+    "enabled": false,
+    "config": {},
+    "credentials": {},
+    "interval_seconds": 1800,
+    "created_at": "2026-03-13 18:02:11.486615",
+    "updated_at": "2026-03-13 18:02:11.486617",
+    "last_sync": null,
+    "last_success": null
+  },
+  "tasks": {
+    "name": "tasks",
+    "connector_type": "tasks",
+    "status": "inactive",
+    "enabled": false,
+    "config": {},
+    "credentials": {},
+    "interval_seconds": 600,
+    "created_at": "2026-03-13 18:02:11.487230",
+    "updated_at": "2026-03-13 18:02:11.487232",
+    "last_sync": null,
+    "last_success": null
+  },
+  "health": {
+    "name": "health",
+    "connector_type": "health",
+    "status": "inactive",
+    "enabled": false,
+    "config": {},
+    "credentials": {},
+    "interval_seconds": 3600,
+    "created_at": "2026-03-13 18:02:11.487823",
+    "updated_at": "2026-03-13 18:02:11.487825",
+    "last_sync": null,
+    "last_success": null
+  }
+}
