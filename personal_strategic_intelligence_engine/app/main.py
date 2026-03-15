@@ -12,6 +12,7 @@ from app.api import profile, board, decisions, reviews, health, signals, governa
 from app.strategy_pipeline.routes import router as strategy_pipeline_router
 from app.execution_engine.routes import router as execution_engine_router
 from app.learning_engine.routes import router as learning_engine_router
+from app.executive_dashboard.routes import router as executive_dashboard_router
 from app.finance.api import finance_router
 from app.finance.intelligence.api import intelligence_router
 from app.finance.simulation.api import simulation_router
@@ -163,6 +164,7 @@ def create_app() -> FastAPI:
     app.include_router(strategy_pipeline_router)
     app.include_router(execution_engine_router)
     app.include_router(learning_engine_router)
+    app.include_router(executive_dashboard_router)
 
     return app
 
