@@ -172,66 +172,147 @@ class ReportGenerator:
         }
     
     def generate_financial_intelligence(self) -> Dict[str, Any]:
-        """Generate Financial Risk & Opportunity Report."""
+        """Generate Financial Risk & Opportunity Report.
+        
+        Aligned with Master Knowledge Package
+        """
         outputs = self._output_generator.generate_financial_report()
         
         return {
             "report_type": "financial_intelligence",
             "report_id": f"fin_{uuid.uuid4().hex[:8]}",
             "generated_at": datetime.utcnow().isoformat(),
+            # Liquidity Position
             "liquidity_position": {
                 "cash_reserve": outputs.cash_reserve,
                 "cash_percentage": outputs.asset_allocation.get("cash", 0.05) * 100,
                 "status": outputs.liquidity_status,
             },
+            # Debt Analysis
             "debt_analysis": {
                 "total_debt": 0,
                 "debt_to_equity": 0,
                 "interest_coverage": 0,
             },
+            # Cashflow Forecast
             "cashflow_forecast": {
                 "projected_inflow": 5000,
                 "projected_outflow": 3000,
                 "net_position": 2000,
             },
+            # Asset Allocation (aligned with StrategyCategory)
+            "asset_allocation": outputs.asset_allocation,
+            # Investment Opportunities
             "investment_opportunities": [
-                {"id": "inv_1", "type": "etf", "expected_return": 0.08, "risk": "low"},
-                {"id": "inv_2", "type": "options", "expected_return": 0.15, "risk": "medium"},
+                {
+                    "id": "inv_1",
+                    "type": "etf",
+                    "strategy_category": "income",
+                    "expected_return": 0.08,
+                    "risk": "low",
+                },
+                {
+                    "id": "inv_2",
+                    "type": "options",
+                    "strategy_category": "volatility",
+                    "expected_return": 0.15,
+                    "risk": "medium",
+                },
             ],
+            # Risk Alerts
             "risk_alerts": [
                 "Portfolio drawdown within acceptable range",
             ],
+            # Portfolio Summary
+            "portfolio_summary": {
+                "total_value": outputs.portfolio_value,
+                "daily_return": outputs.daily_return,
+                "risk_exposure": outputs.risk_exposure,
+            },
             "classification": ReportClassification.REVIEW_REQUIRED.value,
         }
     
     def generate_options_intelligence(self) -> Dict[str, Any]:
-        """Generate SPY 0DTE Options Intelligence Brief."""
+        """Generate SPY 0DTE Options Intelligence Brief.
+        
+        Aligned with Master Knowledge Package (StrategyPrinciple, GreekProfile, IVAnalysis, StrikeCandidate)
+        """
         return {
             "report_type": "options_intelligence",
             "report_id": f"opt_{uuid.uuid4().hex[:8]}",
             "generated_at": datetime.utcnow().isoformat(),
-            "market_conditions": {
-                "spy_price": 505.50,
-                "trend": "bullish",
-                "day_type": "regular",
-            },
-            "gamma_exposure": 0.42,
-            "delta_velocity": 0.15,
-            "liquidity_level": "high",
-            "volume_analysis": {
-                "total_volume": 85000000,
-                "call_volume": 45000000,
-                "put_volume": 40000000,
-            },
-            "volatility_conditions": {
-                "iv": 0.14,
-                "hv": 0.11,
+            # Symbol & Market
+            "symbol": "SPY",
+            "price": 505.50,
+            "trend": "bullish",
+            # Volatility Analysis (Master Knowledge Package aligned)
+            "volatility_regime": "normal",
+            "iv_analysis": {
+                "current_iv": 0.14,
+                "historical_iv": 0.11,
                 "iv_rank": 45,
+                "iv_percentile": 42,
             },
-            "optimal_strikes": [
-                {"strike": 506, "type": "call", "score": 0.85},
-                {"strike": 504, "type": "put", "score": 0.72},
+            # Greek Exposure (Master Knowledge Package aligned - GreekProfile)
+            "portfolio_greeks": {
+                "delta": 0.15,
+                "gamma": 0.42,
+                "theta": -0.08,
+                "vega": 0.12,
+                "rho": 0.02,
+            },
+            "net_gamma_exposure": 0.42,
+            "net_theta": -0.08,
+            "net_vega": 0.12,
+            # Volume Analysis
+            "total_volume": 85000000,
+            "call_volume": 45000000,
+            "put_volume": 40000000,
+            "put_call_ratio": 0.89,
+            # Strike Candidates (Master Knowledge Package aligned - StrikeCandidate)
+            "strike_candidates": [
+                {
+                    "strike": 506.0,
+                    "type": "call",
+                    "delta": 0.55,
+                    "gamma": 0.08,
+                    "theta": -0.03,
+                    "vega": 0.04,
+                    "probability_otm": 0.45,
+                    "risk_reward_ratio": 1.8,
+                    "score": 0.85,
+                },
+                {
+                    "strike": 504.0,
+                    "type": "put",
+                    "delta": -0.45,
+                    "gamma": 0.08,
+                    "theta": -0.03,
+                    "vega": 0.04,
+                    "probability_otm": 0.55,
+                    "risk_reward_ratio": 1.6,
+                    "score": 0.72,
+                },
             ],
+            # Strategy Principles (Master Knowledge Package aligned - StrategyPrinciple)
+            "applicable_principles": [
+                {
+                    "principle_id": "vol_income_001",
+                    "name": "Volatility Income Strategy",
+                    "concept": "Collect premium in elevated IV regimes",
+                    "strategic_application": "0DTE iron condor when IV rank > 50",
+                },
+                {
+                    "principle_id": "momentum_001",
+                    "name": "Momentum Directional",
+                    "concept": "Trade with trend momentum",
+                    "strategic_application": "Directional call spreads in bullish trend",
+                },
+            ],
+            # Recommendations
+            "recommended_strategy": "bullish_call_spread_506_508",
+            "confidence": 0.72,
+            "risk_assessment": "moderate",
             "classification": ReportClassification.REVIEW_REQUIRED.value,
         }
     

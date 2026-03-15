@@ -35,10 +35,15 @@ class Settings(BaseSettings):
     # ===================
     # Security
     # ===================
-    secret_key: str = Field(default="changeme-insecure-default-key", validation_alias="SECRET_KEY")
+    secret_key: str = Field(default="psie-secret-key-2026-production", validation_alias="SECRET_KEY")
     access_token_expire_minutes: int = 60
     enable_auth: bool = False
     cors_origins: str = "http://localhost:3000"
+    
+    # ===================
+    # GitHub Integration
+    # ===================
+    github_token: Optional[str] = Field(default=None, validation_alias="GITHUB_TOKEN")
 
     # ===================
     # Database
@@ -67,6 +72,11 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4-turbo-preview"
     anthropic_api_key: Optional[str] = Field(default=None, validation_alias="ANTHROPIC_API_KEY")
     anthropic_model: str = "claude-3-opus-20240229"
+    
+    # ===================
+    # OpenHands AI Provider
+    # ===================
+    openhands_api_key: Optional[str] = Field(default=None, validation_alias="OPENHANDS_API_KEY")
 
     # ===================
     # Signal / Data Providers

@@ -1,6 +1,7 @@
 """PSIE Output Report Models - standardized report schemas per V47-007.
 
 This module defines the canonical schemas for all PSIE intelligence reports.
+Aligned with Master Knowledge Package (StrategyPrinciple, GreekProfile, IVAnalysis, etc.)
 """
 from datetime import datetime
 from enum import Enum
@@ -26,6 +27,73 @@ class ReportClassification(str, Enum):
     ADVISORY = "advisory"
     REVIEW_REQUIRED = "review_required"
     DECISION_REQUIRED = "decision_required"
+
+
+# ============ Knowledge Package Aligned Models ============
+
+class VolatilityRegime(str, Enum):
+    """Volatility regime classification from Master Knowledge Package."""
+    LOW = "low"
+    NORMAL = "normal"
+    ELEVATED = "elevated"
+    SPIKE = "spike"
+    CRUSH = "crush"
+
+
+class StrategyCategory(str, Enum):
+    """Strategy category from Master Knowledge Package."""
+    VOLATILITY = "volatility"
+    INCOME = "income"
+    DIRECTIONAL = "directional"
+    HEDGING = "hedging"
+    ARBITRAGE = "arbitrage"
+
+
+class OptionLegType(str, Enum):
+    """Option leg type from Master Knowledge Package."""
+    LONG_CALL = "long_call"
+    SHORT_CALL = "short_call"
+    LONG_PUT = "long_put"
+    SHORT_PUT = "short_put"
+    STOCK = "stock"
+
+
+class GreekProfile(BaseModel):
+    """Greek profile aligned with Master Knowledge Package."""
+    delta: float = 0.0
+    gamma: float = 0.0
+    theta: float = 0.0
+    vega: float = 0.0
+    rho: float = 0.0
+
+
+class IVAnalysis(BaseModel):
+    """Implied Volatility analysis from Master Knowledge Package."""
+    current_iv: float = 0.0
+    historical_iv: float = 0.0
+    iv_rank: float = 0.0
+    iv_percentile: float = 0.0
+
+
+class StrikeCandidate(BaseModel):
+    """Strike candidate from Master Knowledge Package."""
+    strike: float
+    type: str  # "call" or "put"
+    delta: float = 0.0
+    gamma: float = 0.0
+    theta: float = 0.0
+    vega: float = 0.0
+    probability_otm: float = 0.0
+    risk_reward_ratio: float = 0.0
+    score: float = 0.0
+
+
+class StrategyPrinciple(BaseModel):
+    """Strategy principle from Master Knowledge Package."""
+    principle_id: str = ""
+    name: str = ""
+    concept: str = ""
+    strategic_application: str = ""
 
 
 # ============ Executive Brief ============
@@ -176,27 +244,46 @@ class FinancialIntelligenceReport(BaseModel):
 # ============ Options Intelligence Report ============
 
 class OptionsIntelligenceReport(BaseModel):
-    """SPY 0DTE Options Intelligence Brief."""
+    """SPY 0DTE Options Intelligence Brief.
+    
+    Aligned with Master Knowledge Package models:
+    - VolatilityRegime, GreekProfile, IVAnalysis, StrikeCandidate, StrategyPrinciple
+    """
     report_type: str = "options_intelligence"
     report_id: str
     generated_at: datetime
     
-    # Market conditions
-    market_conditions: Dict[str, Any] = Field(default_factory=dict)
+    # Symbol & Market
+    symbol: str = "SPY"
+    price: float = 0.0
+    trend: str = "neutral"
     
-    # Greeks
-    gamma_exposure: float = 0.0
-    delta_velocity: float = 0.0
+    # Volatility Analysis (aligned with Master Knowledge Package)
+    volatility_regime: VolatilityRegime = VolatilityRegime.NORMAL
+    iv_analysis: IVAnalysis = Field(default_factory=IVAnalysis)
     
-    # Liquidity
-    liquidity_level: str = "normal"
-    volume_analysis: Dict[str, Any] = Field(default_factory=dict)
+    # Greek Exposure (aligned with GreekProfile)
+    portfolio_greeks: GreekProfile = Field(default_factory=GreekProfile)
+    net_gamma_exposure: float = 0.0
+    net_theta: float = 0.0
+    net_vega: float = 0.0
     
-    # Volatility
-    volatility_conditions: Dict[str, Any] = Field(default_factory=dict)
+    # Volume Analysis
+    total_volume: int = 0
+    call_volume: int = 0
+    put_volume: int = 0
+    put_call_ratio: float = 0.0
     
-    # Strike candidates
-    optimal_strikes: List[Dict[str, Any]] = Field(default_factory=list)
+    # Strike Candidates (aligned with StrikeCandidate)
+    strike_candidates: List[StrikeCandidate] = Field(default_factory=list)
+    
+    # Strategy Principles (aligned with StrategyPrinciple)
+    applicable_principles: List[StrategyPrinciple] = Field(default_factory=list)
+    
+    # Recommendations
+    recommended_strategy: str = ""
+    confidence: float = 0.0
+    risk_assessment: str = "moderate"
     
     classification: str = "review_required"
 
