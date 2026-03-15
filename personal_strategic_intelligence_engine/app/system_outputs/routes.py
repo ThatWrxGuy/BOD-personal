@@ -1,6 +1,16 @@
 """System Outputs API routes.
 
 API endpoints for PSIE operational outputs and intelligence reports.
+
+Per V47-007, this module provides:
+- Executive Brief
+- Strategy Proposals
+- Governance Queue
+- Execution Status
+- Financial Intelligence
+- Options Intelligence
+- Learning Report
+- EOD Report
 """
 from typing import Optional
 
@@ -17,6 +27,7 @@ from app.system_outputs.output_models import (
 )
 from app.system_outputs.output_generator import get_output_generator
 from app.system_outputs.output_collector import get_output_collector
+from app.system_outputs.report_generator import get_report_generator
 from app.core.response_wrapper import (
     success_response,
     error_response,
@@ -151,3 +162,77 @@ async def health_check():
 async def readiness_check():
     """Readiness check endpoint."""
     return success_response({"status": "ready", "service": "system-outputs"})
+
+
+# ============ V47-007 CEO Intelligence Reports ============
+
+@router.get("/executive-brief")
+async def get_executive_brief():
+    """Get Daily Executive Intelligence Brief (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_executive_brief())
+
+
+@router.get("/strategy-proposals")
+async def get_strategy_proposals():
+    """Get Strategy Proposal Report (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_strategy_proposals())
+
+
+@router.get("/governance-queue")
+async def get_governance_queue():
+    """Get Governance Approval Queue (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_governance_queue())
+
+
+@router.get("/execution-status")
+async def get_execution_status():
+    """Get Execution Status Report (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_execution_status())
+
+
+@router.get("/financial-intelligence")
+async def get_financial_intelligence():
+    """Get Financial Risk & Opportunity Report (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_financial_intelligence())
+
+
+@router.get("/options-intelligence")
+async def get_options_intelligence():
+    """Get SPY 0DTE Options Intelligence Brief (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_options_intelligence())
+
+
+@router.get("/learning-report")
+async def get_learning_report():
+    """Get Learning & System Evolution Report (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_learning_report())
+
+
+@router.get("/eod-report")
+async def get_eod_report_v47():
+    """Get End-of-Day System Report (V47-007)."""
+    generator = get_report_generator()
+    return success_response(generator.generate_eod_report())
+
+
+@router.get("/reports/list")
+async def list_all_reports():
+    """List all available reports (V47-007)."""
+    reports = [
+        {"id": "executive-brief", "name": "Daily Executive Brief", "classification": "advisory"},
+        {"id": "strategy-proposals", "name": "Strategy Proposals", "classification": "decision_required"},
+        {"id": "governance-queue", "name": "Governance Queue", "classification": "decision_required"},
+        {"id": "execution-status", "name": "Execution Status", "classification": "advisory"},
+        {"id": "financial-intelligence", "name": "Financial Intelligence", "classification": "review_required"},
+        {"id": "options-intelligence", "name": "Options Intelligence", "classification": "review_required"},
+        {"id": "learning-report", "name": "Learning Report", "classification": "advisory"},
+        {"id": "eod-report", "name": "EOD Report", "classification": "advisory"},
+    ]
+    return success_response({"reports": reports, "total": len(reports)})
