@@ -16,6 +16,11 @@ from app.executive_dashboard.dashboard_models import (
 )
 from app.executive_dashboard.dashboard_service import get_dashboard_service
 from app.executive_dashboard.command_router import get_command_router
+from app.core.response_wrapper import (
+    wrap_response,
+    error_response,
+    success_response,
+)
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -27,126 +32,82 @@ router = APIRouter(prefix="/dashboard", tags=["executive-dashboard"])
 
 @router.get("/overview")
 async def get_overview():
-    """
-    Get complete dashboard overview.
-    
-    Returns all dashboard views in a single response.
-    """
+    """Get complete dashboard overview."""
     service = get_dashboard_service()
-    return service.get_full_overview()
+    return success_response(service.get_full_overview())
 
 
 @router.get("/system")
 async def get_system_overview():
-    """
-    Get system overview.
-    
-    Returns high-level operational metrics.
-    """
+    """Get system overview."""
     service = get_dashboard_service()
     overview = service.get_system_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Strategy Endpoints ============
 
 @router.get("/strategies")
 async def get_strategy_overview():
-    """
-    Get strategy pipeline overview.
-    
-    Returns strategy pipeline activity and metrics.
-    """
+    """Get strategy pipeline overview."""
     service = get_dashboard_service()
     overview = service.get_strategy_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Execution Endpoints ============
 
 @router.get("/executions")
 async def get_execution_overview():
-    """
-    Get execution overview.
-    
-    Returns execution activity and metrics.
-    """
+    """Get execution overview."""
     service = get_dashboard_service()
     overview = service.get_execution_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Agent Endpoints ============
 
 @router.get("/agents")
 async def get_agent_overview():
-    """
-    Get agent overview.
-    
-    Returns agent performance and metrics.
-    """
+    """Get agent overview."""
     service = get_dashboard_service()
     overview = service.get_agent_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Learning Endpoints ============
 
 @router.get("/learning")
 async def get_learning_overview():
-    """
-    Get learning overview.
-    
-    Returns learning engine metrics and insights.
-    """
+    """Get learning overview."""
     service = get_dashboard_service()
     overview = service.get_learning_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Graph Endpoints ============
 
 @router.get("/graph")
 async def get_graph_overview():
-    """
-    Get knowledge graph overview.
-    
-    Returns contextual intelligence metrics.
-    """
+    """Get knowledge graph overview."""
     service = get_dashboard_service()
     overview = service.get_graph_overview()
-    return overview.dict()
+    return success_response(overview.dict())
 
 
 # ============ Command Endpoints ============
 
-@router.post("/command", response_model=CommandResult)
+@router.post("/command", response_model=dict)
 async def execute_command(request: CommandRequest):
-    """
-    Execute a dashboard command.
-    
-    Commands include:
-    - approve_proposal: Approve a strategy proposal
-    - reject_proposal: Reject a strategy proposal
-    - trigger_execution: Manually trigger an execution
-    - pause_agent: Pause an agent
-    - resume_agent: Resume an agent
-    - rebuild_graph: Rebuild the knowledge graph
-    - trigger_learning_cycle: Trigger a learning cycle
-    - get_system_status: Get system status
-    """
+    """Execute a dashboard command."""
     router_instance = get_command_router()
     result = await router_instance.execute_command(request)
-    return result
+    return success_response(result.dict())
 
 
 @router.post("/approve")
 async def approve_proposal(request: ApprovalRequest):
-    """
-    Approve or reject a strategy proposal.
-    
-    This is a convenience endpoint for governance overrides.
-    """
+    """Approve or reject a strategy proposal."""
     router_instance = get_command_router()
     
     if request.decision == "approve":
@@ -164,46 +125,35 @@ async def approve_proposal(request: ApprovalRequest):
             requester=request.approver,
         )
     else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid decision. Use 'approve' or 'reject'."
-        )
+        return error_response("Invalid decision. Use 'approve' or 'reject'.")
     
     result = await router_instance.execute_command(cmd_request)
     
-    return ApprovalResult(
-        proposal_id=request.proposal_id,
-        decision=request.decision,
-        status=result.status.value,
-        message=result.message,
-    )
+    return success_response({
+        "proposal_id": request.proposal_id,
+        "decision": request.decision,
+        "status": result.status.value,
+        "message": result.message,
+    })
 
 
 # ============ Statistics Endpoint ============
 
 @router.get("/statistics")
 async def get_dashboard_statistics():
-    """
-    Get dashboard statistics.
-    
-    Returns aggregate metrics across all subsystems.
-    """
+    """Get dashboard statistics."""
     service = get_dashboard_service()
     stats = service.get_statistics()
-    return stats.dict()
+    return success_response(stats.dict())
 
 
 # ============ Command History ============
 
 @router.get("/commands/history")
 async def get_command_history(limit: int = 50):
-    """
-    Get command execution history.
-    
-    Returns recent command executions.
-    """
+    """Get command execution history."""
     router_instance = get_command_router()
-    return router_instance.get_command_history(limit)
+    return success_response(router_instance.get_command_history(limit))
 
 
 # ============ Utility Endpoints ============
@@ -211,10 +161,10 @@ async def get_command_history(limit: int = 50):
 @router.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "service": "executive-dashboard"}
+    return success_response({"status": "healthy", "service": "executive-dashboard"})
 
 
 @router.get("/ready")
 async def readiness_check():
     """Readiness check endpoint."""
-    return {"status": "ready", "service": "executive-dashboard"}
+    return success_response({"status": "ready", "service": "executive-dashboard"})
