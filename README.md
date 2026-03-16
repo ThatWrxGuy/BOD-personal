@@ -270,6 +270,7 @@ Busy Bee development follows a directive-driven architecture.
 | Directive | Description |
 |-----------|-------------|
 | BB-INT-000 | Strategic Discipline Framework |
+| BB-ARCH-002 | Agent Role Separation Doctrine |
 | BB-DOM-001 | Specialist Agent Framework |
 | BB-DOM-002 | Signal Intelligence Architecture |
 | BB-DOM-003 | Intelligence Reporting System |
