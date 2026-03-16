@@ -7,6 +7,12 @@ from app.services.llm_client import (
     get_llm_client,
 )
 
+# OpenHands AI Agent client
+from app.services.openhands_client import (
+    OpenHandsClient,
+    get_openhands_client,
+)
+
 # Strategic analysis services
 from app.services.strategic_analysis_service import (
     StrategicAnalysisService,
@@ -19,6 +25,8 @@ __all__ = [
     "AnthropicClient",
     "MockLLMClient",
     "get_llm_client",
+    "OpenHandsClient",
+    "get_openhands_client",
     "StrategicAnalysisService",
     "get_strategic_analysis_service",
 ]

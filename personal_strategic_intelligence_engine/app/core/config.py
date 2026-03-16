@@ -69,6 +69,11 @@ class Settings(BaseSettings):
     anthropic_model: str = "claude-3-opus-20240229"
 
     # ===================
+    # OpenHands AI Agent API
+    # ===================
+    openhands_api_key: Optional[str] = Field(default=None, validation_alias="OPENHANDS_API_KEY")
+
+    # ===================
     # Signal / Data Providers
     # ===================
     alphavantage_api_key: Optional[str] = Field(default=None, validation_alias="ALPHAVANTAGE_API_KEY")

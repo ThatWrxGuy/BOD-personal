@@ -173,6 +173,72 @@ class LLMSummarizationSource(BaseResearchSource):
         }
 
 
+class OpenHandsResearchSource(BaseResearchSource):
+    """OpenHands AI Agent-powered research source.
+    
+    This source uses OpenHands agents to perform complex research tasks,
+    code analysis, and multi-step reasoning.
+    """
+    
+    def __init__(self):
+        super().__init__("openhands")
+        self._check_availability()
+    
+    def _check_availability(self):
+        """Check if OpenHands API is available."""
+        secret_manager = get_secret_manager()
+        self.enabled = secret_manager.has_secret("OPENHANDS_API_KEY")
+    
+    async def query(self, query: str, **kwargs) -> Dict[str, Any]:
+        """Query OpenHands agent for research."""
+        
+        if not self.enabled:
+            return {
+                "success": False,
+                "error": "OpenHands API key not configured",
+                "data": [],
+            }
+        
+        # Import here to avoid circular imports
+        from app.services import get_openhands_client
+        
+        client = get_openhands_client()
+        
+        try:
+            result = await client.run_task(
+                task=f"Research and analyze: {query}",
+                agent_id=kwargs.get("agent_id", "general-purpose"),
+            )
+            
+            if "error" in result:
+                return {
+                    "success": False,
+                    "error": result["error"],
+                    "data": [],
+                }
+            
+            return {
+                "success": True,
+                "query": query,
+                "data": [
+                    {
+                        "type": "openhands_analysis",
+                        "summary": result.get("result", "Task completed"),
+                        "agent_id": result.get("agent_id", "unknown"),
+                        "confidence": 0.85,
+                    }
+                ],
+                "source": self.name,
+            }
+        except Exception as e:
+            logger.error(f"OpenHands research error: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "data": [],
+            }
+
+
 class ResearchSourceManager:
     """Manages research sources."""
     
@@ -182,6 +248,7 @@ class ResearchSourceManager:
             "economic": EconomicDataSource(),
             "knowledge_base": KnowledgeBaseSource(),
             "llm": LLMSummarizationSource(),
+            "openhands": OpenHandsResearchSource(),
         }
     
     def get_available_sources(self) -> List[str]:
