@@ -127,7 +127,7 @@ class RiskEvent:
     trigger_signals: List[str] = field(default_factory=list)
     
     # Impact
-    impact_score: float  # 0-1
+    impact_score: float = 0.0  # 0-1
     affected_domains: List[str] = field(default_factory=list)
     
     # Resolution
@@ -150,7 +150,7 @@ class OpportunityEvent:
     
     # Impact
     leverage_score: float  # 0-1
-    impact_score: float  # 0-1
+    impact_score: float = 0.0  # 0-1
     
     # Outcome
     outcome: str = ""
