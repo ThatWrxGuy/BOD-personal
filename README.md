@@ -203,7 +203,18 @@ Busy Bee acts as the life-domain application layer built on PSIP.
 
 ---
 
-## Repository Structure
+## System Architecture
+
+See architecture diagrams in:
+
+- [System Overview](docs/architecture/busy_bee_architecture_overview.md)
+- [Executive Hierarchy](docs/architecture/executive_hierarchy_diagram.md)
+- [Domain Agent Map](docs/architecture/domain_agent_map.md)
+- [Signal Flow](docs/architecture/signal_flow_diagram.md)
+- [Intelligence Pipeline](docs/architecture/intelligence_pipeline_diagram.md)
+- [PSIP vs Busy Bee](docs/architecture/psip_vs_busy_bee_architecture.md)
+
+Also see: [System Map](docs/BUSY_BEE_SYSTEM_MAP.md)
 
 Example structure of the Busy Bee system:
 
