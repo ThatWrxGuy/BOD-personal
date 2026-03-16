@@ -1,8 +1,31 @@
 """
-Strategic Intelligence Engine - BB-INT-001
+# Strategic Discipline Framework (BB-INT-000)
 
-This module implements the Strategic Intelligence Engine that transforms Busy Bee
-from a domain-aware reporting system into a true life strategy operating system.
+The Strategic Intelligence Engine operates within the following discipline rules:
+
+## Priority Limits: The 3-3-3 Rule
+- Maximum 3 ACTIVE PRIORITIES at once
+- Maximum 3 SECONDARY FOCUS items
+- Maximum 3 WATCH items
+
+## Decision Priority Formula
+```
+Priority Score = (Impact × 0.35) + (Urgency × 0.25) + (Leverage × 0.20) + (Alignment × 0.15) + (Confidence × 0.05)
+```
+
+## Score Thresholds
+| Score | Classification |
+|-------|---------------|
+| 0-30 | DEFER |
+| 31-50 | WATCH |
+| 51-70 | SECONDARY |
+| 71-100 | PRIORITY |
+
+---
+
+## Strategic Intelligence Engine - BB-INT-001
+
+This module implements the Strategic Intelligence Engine that transforms Busy Bee from a domain-aware reporting system into a true life strategy operating system.
 
 Core Capabilities:
 - Strategy Generation
