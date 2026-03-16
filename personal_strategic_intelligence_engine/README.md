@@ -118,9 +118,9 @@ SECRET_KEY=your-secret-key-here
 DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/db
 
 # LLM Provider (at least one required)
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=your-openai-api-key-here
 # OR
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
 
 # Production requires explicit CORS
 CORS_ORIGINS=https://your-domain.com

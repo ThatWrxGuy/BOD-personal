@@ -17,11 +17,21 @@ class CredentialRedactor:
         (r'(secret["\']?\s*[:=]\s*["\']?)([a-zA-Z0-9_-]{20,})', r'\1[REDACTED]'),
         (r'(token["\']?\s*[:=]\s*["\']?)([a-zA-Z0-9_-]{20,})', r'\1[REDACTED]'),
         
+        # GitHub tokens
+        (r'(ghp_)[a-zA-Z0-9]{36}', r'\1[REDACTED]'),
+        (r'(gho_)[a-zA-Z0-9]{36}', r'\1[REDACTED]'),
+        (r'(ghu_)[a-zA-Z0-9]{36}', r'\1[REDACTED]'),
+        (r'(ghs_)[a-zA-Z0-9]{36}', r'\1[REDACTED]'),
+        (r'(ghr_)[a-zA-Z0-9]{36}', r'\1[REDACTED]'),
+        
         # OpenAI keys
         (r'(sk-)[a-zA-Z0-9]{20,}', r'\1[REDACTED]'),
         
         # Anthropic keys
         (r'(sk-ant-)[a-zA-Z0-9_-]{30,}', r'\1[REDACTED]'),
+        
+        # OpenHands keys
+        (r'(ohds_)[a-zA-Z0-9]{32,}', r'\1[REDACTED]'),
         
         # AWS keys
         (r'(AKIA)[A-Z0-9]{16}', r'\1[REDACTED]'),
@@ -42,6 +52,10 @@ class CredentialRedactor:
         "client_secret", "client-secret",
         "private_key", "private-key",
         "authorization",
+        # GitHub
+        "github_token", "github-token", "GITHUB_TOKEN",
+        # OpenHands
+        "openhands_api_key", "openhands-api-key", "OPENHANDS_API_KEY",
     }
     
     # Fields to partially mask

@@ -1,0 +1,63 @@
+# =============================================================================
+# Security - Secrets and Credentials
+# =============================================================================
+# IMPORTANT: Never commit secrets, credentials, or environment files
+# =============================================================================
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+
+# Secrets and keys
+secrets/
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+
+# Private keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.pem
+
+# API Keys / Credentials
+credentials.json
+*.credentials
+service-account.json
+
+# Docker
+.dockerignore  # Don't add secrets to this!
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

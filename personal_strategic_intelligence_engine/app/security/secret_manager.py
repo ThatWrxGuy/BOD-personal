@@ -18,6 +18,12 @@ class SecretManager:
         "OPENAI_API_KEY": "openai_api_key",
         "ANTHROPIC_API_KEY": "anthropic_api_key",
         
+        # GitHub
+        "GITHUB_TOKEN": "github_token",
+        
+        # OpenHands
+        "OPENHANDS_API_KEY": "openhands_api_key",
+        
         # Data providers
         "ALPHAVANTAGE_API_KEY": "alphavantage_api_key",
         "POLYGON_API_KEY": "polygon_api_key",
