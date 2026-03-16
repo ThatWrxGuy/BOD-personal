@@ -27,6 +27,11 @@ from app.intelligence.evolution.routes import router as evolution_router
 from app.intelligence.strategy_simulation.routes import router as strategy_simulation_router
 from app.finance.options_intelligence.routes import router as options_intelligence_router
 from app.intelligence_bus.routes import router as intelligence_bus_router
+from app.finance.market_intelligence.routes import router as market_intelligence_router
+from app.finance.tactical_intelligence.routes import router as tactical_intelligence_router
+from app.finance.spy_0dte_agent.routes import router as spy_0dte_router
+from app.finance.sector_intelligence.routes import router as sector_intelligence_router
+from app.finance.security_selection.routes import router as security_selection_router
 from app.intelligence.alpha_engine.routes import router as alpha_engine_router
 from app.intelligence.autonomous_strategy_lab.routes import router as strategy_lab_router
 from app.identity.auth_middleware import AuthMiddleware
@@ -161,6 +166,11 @@ def create_app() -> FastAPI:
     app.include_router(evolution_router)
     app.include_router(strategy_simulation_router)
     app.include_router(options_intelligence_router)
+    app.include_router(market_intelligence_router)
+    app.include_router(sector_intelligence_router)
+    app.include_router(security_selection_router)
+    app.include_router(tactical_intelligence_router)
+    app.include_router(spy_0dte_router)
     app.include_router(intelligence_bus_router)
     app.include_router(alpha_engine_router)
     app.include_router(strategy_lab_router)
