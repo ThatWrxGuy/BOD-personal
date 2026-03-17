@@ -6,7 +6,7 @@ Per BB-APP-002 Section 9 - Read Model Architecture.
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from enum import Enum
 
@@ -60,47 +60,57 @@ class ActionStatus(str, Enum):
     CANCELED = "canceled"
 
 
+# ============== Helper Functions ==============
+
+def _default_datetime() -> datetime:
+    return datetime.now()
+
+
+def _default_timedelta() -> timedelta:
+    return timedelta(days=1)
+
+
 # ============== Dashboard Read Model ==============
 
 @dataclass
 class DomainHealthSummary:
     """Domain health for dashboard."""
-    domain_id: str
-    domain_name: str
-    score: int
-    trend: TrendDirection
-    status: DomainStatus
-    active_recommendations: int
-    pending_actions: int
+    domain_id: str = ""
+    domain_name: str = ""
+    score: int = 0
+    trend: TrendDirection = TrendDirection.STABLE
+    status: DomainStatus = DomainStatus.HEALTHY
+    active_recommendations: int = 0
+    pending_actions: int = 0
 
 
 @dataclass
 class PriorityItem:
     """Priority item for dashboard."""
-    id: str
-    title: str
-    domain: str
-    urgency: RecommendationUrgency
+    id: str = ""
+    title: str = ""
+    domain: str = ""
+    urgency: RecommendationUrgency = RecommendationUrgency.MEDIUM
     recommendation_id: str | None = None
 
 
 @dataclass
 class UrgentRecommendation:
     """Urgent recommendation for dashboard."""
-    id: str
-    title: str
-    domain: str
-    confidence: float
-    urgency: int
-    status: RecommendationStatus
+    id: str = ""
+    title: str = ""
+    domain: str = ""
+    confidence: float = 0.0
+    urgency: int = 0
+    status: RecommendationStatus = RecommendationStatus.PROPOSED
 
 
 @dataclass
 class PendingAction:
     """Pending action for dashboard."""
-    id: str
-    title: str
-    domain: str
+    id: str = ""
+    title: str = ""
+    domain: str = ""
     due_date: datetime | None = None
     status: ActionStatus = ActionStatus.PROPOSED
 
@@ -108,27 +118,27 @@ class PendingAction:
 @dataclass
 class SystemStatusInfo:
     """System status for dashboard."""
-    status: SystemStatus
-    posture: StrategicPosture
-    readiness_score: int
-    risk_alerts: int
-    last_updated: datetime
+    status: SystemStatus = SystemStatus.HEALTHY
+    posture: StrategicPosture = StrategicPosture.NEUTRAL
+    readiness_score: int = 0
+    risk_alerts: int = 0
+    last_updated: datetime = field(default_factory=_default_datetime)
 
 
 @dataclass
 class BriefSummary:
     """Brief summary for dashboard."""
-    id: str
-    title: str
-    generated_at: datetime
-    posture: StrategicPosture
-    readiness_score: int
+    id: str = ""
+    title: str = ""
+    generated_at: datetime = field(default_factory=_default_datetime)
+    posture: StrategicPosture = StrategicPosture.NEUTRAL
+    readiness_score: int = 0
 
 
 @dataclass
 class DashboardReadModel:
     """Complete dashboard read model."""
-    system_status: SystemStatusInfo
+    system_status: SystemStatusInfo = field(default_factory=SystemStatusInfo)
     brief: BriefSummary | None = None
     domain_health: list[DomainHealthSummary] = field(default_factory=list)
     priorities: list[PriorityItem] = field(default_factory=list)
@@ -142,44 +152,44 @@ class DashboardReadModel:
 @dataclass
 class BriefDomainSection:
     """Brief domain section."""
-    domain_id: str
-    domain_name: str
-    summary: str
-    status: DomainStatus
-    key_insight: str
-    recommendations_count: int
+    domain_id: str = ""
+    domain_name: str = ""
+    summary: str = ""
+    status: DomainStatus = DomainStatus.HEALTHY
+    key_insight: str = ""
+    recommendations_count: int = 0
 
 
 @dataclass
 class BriefRecommendation:
     """Brief recommendation item."""
-    id: str
-    title: str
-    domain: str
-    priority: int
-    confidence: float
-    rationale: str
+    id: str = ""
+    title: str = ""
+    domain: str = ""
+    priority: int = 0
+    confidence: float = 0.0
+    rationale: str = ""
 
 
 @dataclass
 class BriefRiskAlert:
     """Brief risk alert."""
-    id: str
-    severity: str
-    message: str
-    domain: str
+    id: str = ""
+    severity: str = ""
+    message: str = ""
+    domain: str = ""
 
 
 @dataclass
 class BriefDetailReadModel:
     """Complete brief detail read model."""
-    id: str
-    title: str
-    generated_at: datetime
-    cycle_type: str  # daily, weekly, monthly
-    status: str
-    posture: StrategicPosture
-    readiness_score: int
+    id: str = ""
+    title: str = ""
+    generated_at: datetime = field(default_factory=_default_datetime)
+    cycle_type: str = "weekly"
+    status: str = "draft"
+    posture: StrategicPosture = StrategicPosture.NEUTRAL
+    readiness_score: int = 0
     risk_alerts: list[BriefRiskAlert] = field(default_factory=list)
     domain_sections: list[BriefDomainSection] = field(default_factory=list)
     recommendations: list[BriefRecommendation] = field(default_factory=list)
@@ -192,62 +202,62 @@ class BriefDetailReadModel:
 @dataclass
 class DomainScoreHistory:
     """Domain score history point."""
-    timestamp: datetime
-    score: int
+    timestamp: datetime = field(default_factory=_default_datetime)
+    score: int = 0
 
 
 @dataclass
 class DomainSignal:
     """Domain signal."""
-    id: str
-    signal_type: str
-    description: str
-    timestamp: datetime
-    importance: int
+    id: str = ""
+    signal_type: str = ""
+    description: str = ""
+    timestamp: datetime = field(default_factory=_default_datetime)
+    importance: int = 0
 
 
 @dataclass
 class DomainRecommendation:
     """Domain recommendation."""
-    id: str
-    title: str
-    confidence: float
-    urgency: int
-    status: RecommendationStatus
+    id: str = ""
+    title: str = ""
+    confidence: float = 0.0
+    urgency: int = 0
+    status: RecommendationStatus = RecommendationStatus.PROPOSED
 
 
 @dataclass
 class DomainAction:
     """Domain action."""
-    id: str
-    title: str
-    status: ActionStatus
+    id: str = ""
+    title: str = ""
+    status: ActionStatus = ActionStatus.PROPOSED
     due_date: datetime | None = None
 
 
 @dataclass
 class DomainOverviewReadModel:
     """Domain overview read model."""
-    domain_id: str
-    domain_name: str
-    description: str
-    score: int
-    trend: TrendDirection
-    status: DomainStatus
-    recommendations_count: int
-    pending_actions_count: int
-    active_signals_count: int
+    domain_id: str = ""
+    domain_name: str = ""
+    description: str = ""
+    score: int = 0
+    trend: TrendDirection = TrendDirection.STABLE
+    status: DomainStatus = DomainStatus.HEALTHY
+    recommendations_count: int = 0
+    pending_actions_count: int = 0
+    active_signals_count: int = 0
 
 
 @dataclass
 class DomainDetailReadModel:
     """Complete domain detail read model."""
-    domain_id: str
-    domain_name: str
-    description: str
-    score: int
-    trend: TrendDirection
-    status: DomainStatus
+    domain_id: str = ""
+    domain_name: str = ""
+    description: str = ""
+    score: int = 0
+    trend: TrendDirection = TrendDirection.STABLE
+    status: DomainStatus = DomainStatus.HEALTHY
     
     # Score history
     score_history: list[DomainScoreHistory] = field(default_factory=list)
@@ -273,18 +283,18 @@ class DomainDetailReadModel:
 @dataclass
 class RecommendationDetailReadModel:
     """Complete recommendation detail read model."""
-    id: str
-    title: str
-    description: str
-    domain: str
-    confidence: float
-    urgency: int
-    status: RecommendationStatus
+    id: str = ""
+    title: str = ""
+    description: str = ""
+    domain: str = ""
+    confidence: float = 0.0
+    urgency: int = 0
+    status: RecommendationStatus = RecommendationStatus.PROPOSED
     
     # Reasoning
-    rationale: str
-    expected_benefit: str
-    likely_tradeoff: str
+    rationale: str = ""
+    expected_benefit: str = ""
+    likely_tradeoff: str = ""
     
     # Supporting data
     supporting_signals: list[str] = field(default_factory=list)
@@ -295,7 +305,7 @@ class RecommendationDetailReadModel:
     linked_actions: list[str] = field(default_factory=list)
     
     # Timestamps
-    created_at: datetime
+    created_at: datetime = field(default_factory=_default_datetime)
     expires_at: datetime | None = None
     acknowledged_at: datetime | None = None
 
@@ -303,12 +313,12 @@ class RecommendationDetailReadModel:
 @dataclass
 class RecommendationSummaryReadModel:
     """Recommendation summary for lists."""
-    id: str
-    title: str
-    domain: str
-    confidence: float
-    urgency: int
-    status: RecommendationStatus
+    id: str = ""
+    title: str = ""
+    domain: str = ""
+    confidence: float = 0.0
+    urgency: int = 0
+    status: RecommendationStatus = RecommendationStatus.PROPOSED
     expected_impact: str = ""
 
 
@@ -325,17 +335,17 @@ class ActionOrigin:
 @dataclass
 class ActionDetailReadModel:
     """Complete action detail read model."""
-    id: str
-    title: str
-    description: str
-    domain: str
-    status: ActionStatus
+    id: str = ""
+    title: str = ""
+    description: str = ""
+    domain: str = ""
+    status: ActionStatus = ActionStatus.PROPOSED
     
     # Timing
     due_date: datetime | None = None
     estimated_minutes: int = 30
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = field(default_factory=_default_datetime)
+    updated_at: datetime = field(default_factory=_default_datetime)
     completed_at: datetime | None = None
     
     # Origin
@@ -349,10 +359,10 @@ class ActionDetailReadModel:
 @dataclass
 class ActionSummaryReadModel:
     """Action summary for lists."""
-    id: str
-    title: str
-    domain: str
-    status: ActionStatus
+    id: str = ""
+    title: str = ""
+    domain: str = ""
+    status: ActionStatus = ActionStatus.PROPOSED
     due_date: datetime | None = None
     priority: int = 3
 
@@ -362,24 +372,24 @@ class ActionSummaryReadModel:
 @dataclass
 class MemoryEntityLink:
     """Link to related entity."""
-    entity_type: str  # recommendation, action, brief, domain
-    entity_id: str
+    entity_type: str = ""
+    entity_id: str = ""
 
 
 @dataclass
 class MemoryEntryReadModel:
     """Memory entry read model."""
-    id: str
-    title: str
-    content: str
-    memory_type: str
+    id: str = ""
+    title: str = ""
+    content: str = ""
+    memory_type: str = ""
     
     tags: list[str] = field(default_factory=list)
     domains: list[str] = field(default_factory=list)
     linked_entities: list[MemoryEntityLink] = field(default_factory=list)
     
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = field(default_factory=_default_datetime)
+    updated_at: datetime = field(default_factory=_default_datetime)
 
 
 # ============== Review Read Models ==============
@@ -403,14 +413,14 @@ class ReviewRecommendationSummary:
 @dataclass
 class ReviewDetailReadModel:
     """Complete review detail read model."""
-    id: str
-    review_type: str  # daily, weekly, monthly, quarterly
-    status: str  # in_progress, completed
-    period_start: datetime
-    period_end: datetime
+    id: str = ""
+    review_type: str = "weekly"
+    status: str = "in_progress"
+    period_start: datetime = field(default_factory=_default_datetime)
+    period_end: datetime = field(default_factory=_default_datetime)
     
     # Summary data
-    overall_score: float
+    overall_score: float = 0.0
     actions: ReviewActionSummary = field(default_factory=ReviewActionSummary)
     recommendations: ReviewRecommendationSummary = field(default_factory=ReviewRecommendationSummary)
     
@@ -421,8 +431,19 @@ class ReviewDetailReadModel:
     next_period_focus: list[str] = field(default_factory=list)
     
     # Timestamps
-    started_at: datetime
+    started_at: datetime = field(default_factory=_default_datetime)
     completed_at: datetime | None = None
+
+
+@dataclass
+class ReviewSummaryReadModel:
+    """Review summary for lists."""
+    id: str = ""
+    review_type: str = "weekly"
+    status: str = "in_progress"
+    period_start: datetime = field(default_factory=_default_datetime)
+    period_end: datetime = field(default_factory=_default_datetime)
+    overall_score: float = 0.0
 
 
 # ============== Settings Read Model ==============
@@ -439,9 +460,9 @@ class UserPreferences:
 @dataclass
 class SettingsReadModel:
     """Settings read model."""
-    user_id: str
-    email: str
-    username: str
+    user_id: str = ""
+    email: str = ""
+    username: str = ""
     preferences: UserPreferences = field(default_factory=UserPreferences)
     integrations: list[dict[str, Any]] = field(default_factory=list)
 
@@ -451,8 +472,8 @@ class SettingsReadModel:
 @dataclass
 class CommandResult:
     """Standard command result."""
-    success: bool
-    message: str
+    success: bool = False
+    message: str = ""
     entity_id: str | None = None
     error_code: str | None = None
     refresh_hint: str | None = None
@@ -477,7 +498,7 @@ __all__ = [
     # Memory
     "MemoryEntryReadModel", "MemoryEntityLink",
     # Reviews
-    "ReviewDetailReadModel", "ReviewActionSummary", "ReviewRecommendationSummary",
+    "ReviewDetailReadModel", "ReviewSummaryReadModel", "ReviewActionSummary", "ReviewRecommendationSummary",
     # Settings
     "SettingsReadModel", "UserPreferences",
     # Commands
