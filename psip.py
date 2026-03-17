@@ -143,6 +143,7 @@ class PSIP:
         
         # Outputs
         self.brief_generator = ExecutiveBriefGenerator()
+        self.generated_briefs: list = []  # Store generated briefs
         
         # Initialize governance
         self._initialize_governance()
@@ -262,7 +263,16 @@ class PSIP:
         # Generate brief
         brief = self.brief_generator.generate(domain_reports, strategy_status, risk_summary)
         
+        # Store brief
+        self.generated_briefs.append(brief)
+        
         return brief
+    
+    def get_latest_brief(self):
+        """Get the most recent executive brief"""
+        if self.generated_briefs:
+            return self.generated_briefs[-1]
+        return None
     
     def get_system_status(self) -> dict:
         """Get overall system status"""
