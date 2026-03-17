@@ -19,6 +19,8 @@ class ExecutiveBrief:
     recommended_actions: List[Dict[str, Any]]
     domain_summaries: Dict[str, str]
     generated_at: datetime = field(default_factory=datetime.now)
+    # BB-FIN-021: Tactical trade intelligence section
+    tactical_trade_insights: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class ExecutiveBriefGenerator:
@@ -39,7 +41,8 @@ class ExecutiveBriefGenerator:
         self,
         domain_reports: Dict[str, Dict[str, Any]],
         strategy_status: Dict[str, Any],
-        risk_summary: Dict[str, Any]
+        risk_summary: Dict[str, Any],
+        tactical_trade_insights: List[Dict[str, Any]] = None
     ) -> ExecutiveBrief:
         """Generate an executive brief"""
         
@@ -68,7 +71,8 @@ class ExecutiveBriefGenerator:
             major_opportunities=opportunities,
             critical_risks=risks,
             recommended_actions=actions,
-            domain_summaries=domain_summaries
+            domain_summaries=domain_summaries,
+            tactical_trade_insights=tactical_trade_insights or []
         )
         
         self.briefs.append(brief)

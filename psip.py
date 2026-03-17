@@ -84,6 +84,19 @@ from outputs import (
     ExecutiveBriefGenerator, ExecutiveBrief
 )
 
+# BB-FIN-021: Finance Trade Intelligence
+try:
+    from finance_trade_intelligence_service import (
+        get_latest_spy0dte_trade_insight,
+        build_trade_opportunity,
+        build_trade_risk,
+        build_trade_action,
+        build_finance_trade_summary_appendix
+    )
+    TRADE_INTELLIGENCE_AVAILABLE = True
+except ImportError:
+    TRADE_INTELLIGENCE_AVAILABLE = False
+
 
 class PSIP:
     """
@@ -229,8 +242,12 @@ class PSIP:
             "status": chief.get_domain_status()
         }
     
-    def generate_executive_brief(self) -> ExecutiveBrief:
-        """Generate an executive brief"""
+    def generate_executive_brief(self, include_trade_intelligence: bool = True) -> ExecutiveBrief:
+        """Generate an executive brief
+        
+        Args:
+            include_trade_intelligence: Whether to include SPY 0DTE trade intelligence
+        """
         # First, analyze all domains to process signals into strategies
         for domain in self.domains.keys():
             self.analyze_domain(domain)
@@ -259,8 +276,48 @@ class PSIP:
         # Get risk summary
         risk_summary = self.risk_governor.get_risk_summary()
         
-        # Generate brief
-        brief = self.brief_generator.generate(domain_reports, strategy_status, risk_summary)
+        # BB-FIN-021: Get trade intelligence if available
+        tactical_trade_insights = []
+        
+        if include_trade_intelligence and TRADE_INTELLIGENCE_AVAILABLE:
+            try:
+                trade_insight = get_latest_spy0dte_trade_insight()
+                if trade_insight:
+                    tactical_trade_insights = [trade_insight.to_dict()]
+                    
+                    # Enrich finance domain summary with trade intelligence
+                    if "finance" in domain_reports:
+                        trade_summary = build_finance_trade_summary_appendix(trade_insight)
+                        existing_summary = domain_reports["finance"].get("summary", "")
+                        domain_reports["finance"]["summary"] = f"{existing_summary} {trade_summary}"
+                    
+                    # Add trade opportunity
+                    opportunity = build_trade_opportunity(trade_insight)
+                    if opportunity:
+                        domain_reports["finance"].setdefault("trade_opportunities", []).append(opportunity)
+                    
+                    # Add trade risk
+                    risk = build_trade_risk(trade_insight)
+                    if risk:
+                        domain_reports["finance"].setdefault("trade_risks", []).append(risk)
+                    
+                    # Add trade action
+                    action = build_trade_action(trade_insight)
+                    if action:
+                        domain_reports["finance"].setdefault("trade_actions", []).append(action)
+                        
+            except Exception as e:
+                # Graceful degradation - log warning but continue
+                import logging
+                logging.getLogger(__name__).warning(f"Trade intelligence unavailable: {e}")
+        
+        # Generate brief with trade intelligence
+        brief = self.brief_generator.generate(
+            domain_reports, 
+            strategy_status, 
+            risk_summary,
+            tactical_trade_insights
+        )
         
         return brief
     
