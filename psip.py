@@ -13,38 +13,17 @@ Architecture:
 This is the main entry point for the PSIP system.
 """
 
-from layer1_strategic_intelligence_core import (
-    StrategyLab, StrategicHypothesis,
-    SimulationEngine, SimulationResult,
-    EdgeDiscoveryEngine, Edge,
-    KnowledgeGraph, Node, Relationship,
-    LearningEngine, Lesson, DecisionRecord,
-    ScenarioPlanner, Scenario, ScenarioType, Timeframe,
-    SignalFusionEngine, Signal, FusedSignal
-)
+import logging
 
-from layer2_governance_layer import (
-    ExecutiveCouncil, CouncilMember, CouncilDecision, DecisionPriority, DecisionStatus,
-    RiskGovernor, Risk, RiskThreshold, RiskLevel, RiskStatus,
-    ExecutionGateManager, ExecutionGate, GatePolicy, GateStatus, GateStep,
-    CapitalDeploymentCoordinator, CapitalAllocation, CapitalBudget, AllocationStatus,
-    PriorityRouter, Task, Priority, TaskStatus
-)
+# Module logger
+logger = logging.getLogger(__name__)
 
-from layer3_domain_intelligence import (
-    ChiefOfficer, DomainSignal, DomainStrategy, DomainReport,
-    ChiefFinancialOfficer,
-    ChiefHealthOfficer,
-    ChiefCareerOfficer,
-    ChiefRelationshipOfficer,
-    ChiefIntelligenceOfficer,
-    ChiefLifeArchitect
-)
-
-from infrastructure import (
-    MemoryEngine, MemoryEntry,
-    SignalSystem, Signal, SignalRoute, SignalPriority, SignalStatus
-)
+# Module imports to avoid namespace pollution and name collisions
+import layer1_strategic_intelligence_core as core
+import layer2_governance_layer as governance
+import layer3_domain_intelligence as domain
+import infrastructure as infra
+import outputs
 
 from infrastructure.signal_ingestion import (
     SignalIngestionManager, IngestionResult, IngestionStatus,
@@ -80,11 +59,8 @@ from infrastructure.digital_twin import (
     LeverageOpportunity, LeverageResult
 )
 
-from outputs import (
-    ExecutiveBriefGenerator, ExecutiveBrief
-)
-
 # BB-FIN-021: Finance Trade Intelligence
+TRADE_INTELLIGENCE_AVAILABLE = False
 try:
     from finance_trade_intelligence_service import (
         get_latest_spy0dte_trade_insight,
@@ -94,8 +70,8 @@ try:
         build_finance_trade_summary_appendix
     )
     TRADE_INTELLIGENCE_AVAILABLE = True
-except ImportError:
-    TRADE_INTELLIGENCE_AVAILABLE = False
+except Exception as e:
+    logger.debug("Trade intelligence unavailable: %s", e)
 
 
 class PSIP:
@@ -103,38 +79,52 @@ class PSIP:
     Personal Strategic Intelligence Platform
     
     Main class that orchestrates all PSIP components.
+    
+    This is a façade over the PSIP system. For production use, prefer
+    create_psip() factory which handles dependency injection properly.
     """
     
-    def __init__(self, total_capital: float = 100000):
+    def __init__(
+        self,
+        total_capital: float = 100000,
+        # Optional injected dependencies for testing
+        domains: dict | None = None,
+        signal_system: infra.SignalSystem | None = None,
+        memory: infra.MemoryEngine | None = None,
+        executive_council: governance.ExecutiveCouncil | None = None,
+        risk_governor: governance.RiskGovernor | None = None,
+        brief_generator: outputs.ExecutiveBriefGenerator | None = None,
+        intelligence_cycle: IntelligenceCycleManager | None = None,
+    ):
         # Layer 1: Strategic Intelligence Core
-        self.strategy_lab = StrategyLab()
-        self.simulation_engine = SimulationEngine()
-        self.edge_discovery = EdgeDiscoveryEngine()
-        self.knowledge_graph = KnowledgeGraph()
-        self.learning_engine = LearningEngine()
-        self.scenario_planner = ScenarioPlanner()
-        self.signal_fusion = SignalFusionEngine()
+        self.strategy_lab = core.StrategyLab()
+        self.simulation_engine = core.SimulationEngine()
+        self.edge_discovery = core.EdgeDiscoveryEngine()
+        self.knowledge_graph = core.KnowledgeGraph()
+        self.learning_engine = core.LearningEngine()
+        self.scenario_planner = core.ScenarioPlanner()
+        self.signal_fusion = core.SignalFusionEngine()
         
         # Layer 2: Governance Layer
-        self.executive_council = ExecutiveCouncil()
-        self.risk_governor = RiskGovernor()
-        self.execution_gate = ExecutionGateManager()
-        self.capital_coordinator = CapitalDeploymentCoordinator(total_capital)
-        self.priority_router = PriorityRouter()
+        self.executive_council = executive_council or governance.ExecutiveCouncil()
+        self.risk_governor = risk_governor or governance.RiskGovernor()
+        self.execution_gate = governance.ExecutionGateManager()
+        self.capital_coordinator = governance.CapitalDeploymentCoordinator(total_capital)
+        self.priority_router = governance.PriorityRouter()
         
-        # Layer 3: Domain Intelligence
-        self.domains = {
-            "finance": ChiefFinancialOfficer(),
-            "health": ChiefHealthOfficer(),
-            "career": ChiefCareerOfficer(),
-            "relationships": ChiefRelationshipOfficer(),
-            "intelligence": ChiefIntelligenceOfficer(),
-            "life_architecture": ChiefLifeArchitect()
+        # Layer 3: Domain Intelligence (use injected or create new)
+        self.domains = domains or {
+            "finance": domain.ChiefFinancialOfficer(),
+            "health": domain.ChiefHealthOfficer(),
+            "career": domain.ChiefCareerOfficer(),
+            "relationships": domain.ChiefRelationshipOfficer(),
+            "intelligence": domain.ChiefIntelligenceOfficer(),
+            "life_architecture": domain.ChiefLifeArchitect()
         }
         
-        # Infrastructure
-        self.memory = MemoryEngine()
-        self.signal_system = SignalSystem()
+        # Infrastructure (use injected or create new)
+        self.memory = memory or infra.MemoryEngine()
+        self.signal_system = signal_system or infra.SignalSystem()
         
         # BB-INF-007: Signal Ingestion Layer
         self.ingestion_manager = get_ingestion_manager()
@@ -142,7 +132,7 @@ class PSIP:
         self.health_monitor = get_health_monitor()
         
         # BB-INF-007: Intelligence Cycle
-        self.intelligence_cycle = get_intelligence_cycle_manager()
+        self.intelligence_cycle = intelligence_cycle or get_intelligence_cycle_manager()
         
         # BB-INF-008: Life Signal Graph
         self.life_graph = get_life_graph()
@@ -155,7 +145,7 @@ class PSIP:
         self.leverage_discovery = get_leverage_discovery_engine()
         
         # Outputs
-        self.brief_generator = ExecutiveBriefGenerator()
+        self.brief_generator = brief_generator or outputs.ExecutiveBriefGenerator()
         
         # Initialize governance
         self._initialize_governance()
@@ -178,7 +168,7 @@ class PSIP:
         for domain in self.domains.keys():
             self.priority_router.add_domain_priority(domain, 5)
     
-    def process_signal(self, signal_data: dict):
+    def process_signal(self, signal_data: dict) -> infra.Signal:
         """Process an incoming signal through the full pipeline"""
         # 1. Emit signal
         signal = self.signal_system.emit(
@@ -186,14 +176,20 @@ class PSIP:
             signal_type=signal_data.get("type", "general"),
             domain=signal_data.get("domain", "general"),
             payload=signal_data.get("payload", {}),
-            priority=SignalPriority.NORMAL
+            priority=infra.SignalPriority.NORMAL
         )
         
-        # 2. Store in memory
+        # 2. Store in memory (store normalized record, not raw input)
         self.memory.store(
             memory_type="signal",
-            content=signal_data,
-            domain=signal_data.get("domain"),
+            content={
+                "id": signal.id,
+                "source": signal.source,
+                "signal_type": signal.signal_type,
+                "domain": signal.domain,
+                "payload": signal.payload,
+            },
+            domain=signal.domain,
             importance=signal_data.get("importance", 0.5)
         )
         
@@ -209,20 +205,8 @@ class PSIP:
         # Get signals for domain
         signals = self.signal_system.get_signals_by_domain(domain)
         
-        # Convert to DomainSignal format
-        domain_signals = [
-            DomainSignal(
-                id=s.id,
-                domain=s.domain,
-                signal_type=s.signal_type,
-                title=s.payload.get("title", ""),
-                description=s.payload.get("description", ""),
-                data=s.payload,
-                strength=s.payload.get("strength", 0.5),
-                confidence=s.payload.get("confidence", 0.5)
-            )
-            for s in signals
-        ]
+        # Convert to DomainSignal format using the mapper
+        domain_signals = self._map_signals_to_domain(signals)
         
         # Analyze
         analysis = chief.analyze_signals(domain_signals)
@@ -242,75 +226,40 @@ class PSIP:
             "status": chief.get_domain_status()
         }
     
-    def generate_executive_brief(self, include_trade_intelligence: bool = True) -> ExecutiveBrief:
+    def _map_signals_to_domain(self, signals: list[infra.Signal]) -> list[domain.DomainSignal]:
+        """Map infrastructure signals to domain signals"""
+        return [
+            domain.DomainSignal(
+                id=s.id,
+                domain=s.domain,
+                signal_type=s.signal_type,
+                title=s.payload.get("title", ""),
+                description=s.payload.get("description", ""),
+                data=s.payload,
+                strength=s.payload.get("strength", 0.5),
+                confidence=s.payload.get("confidence", 0.5)
+            )
+            for s in signals
+        ]
+    
+    def generate_executive_brief(self, include_trade_intelligence: bool = True) -> outputs.ExecutiveBrief:
         """Generate an executive brief
         
         Args:
             include_trade_intelligence: Whether to include SPY 0DTE trade intelligence
         """
-        # First, analyze all domains to process signals into strategies
-        for domain in self.domains.keys():
-            self.analyze_domain(domain)
-        
-        # Get domain reports
-        domain_reports = {}
-        
-        for domain, chief in self.domains.items():
-            report = chief.create_report()
-            domain_reports[domain] = {
-                "summary": f"{domain.capitalize()}: {chief.get_domain_status()}",
-                "recommendations": [r for r in report.recommendations],
-                "opportunities": chief.get_active_strategies(),
-                "risks": []
-            }
-        
-        # Get strategy status
-        active_strategies = []
-        for chief in self.domains.values():
-            active_strategies.extend(chief.get_active_strategies())
-        
-        strategy_status = {
-            "active_strategies": [{"id": s.id, "title": s.title} for s in active_strategies]
-        }
-        
-        # Get risk summary
-        risk_summary = self.risk_governor.get_risk_summary()
-        
-        # BB-FIN-021: Get trade intelligence if available
-        tactical_trade_insights = []
-        
+        # Orchestrate the various steps
+        self._refresh_domain_analyses()
+        domain_reports = self._collect_domain_reports()
+        strategy_status = self._build_strategy_status()
+        risk_summary = self._build_risk_summary()
+
+        # Apply trade intelligence if requested
         if include_trade_intelligence and TRADE_INTELLIGENCE_AVAILABLE:
-            try:
-                trade_insight = get_latest_spy0dte_trade_insight()
-                if trade_insight:
-                    tactical_trade_insights = [trade_insight.to_dict()]
-                    
-                    # Enrich finance domain summary with trade intelligence
-                    if "finance" in domain_reports:
-                        trade_summary = build_finance_trade_summary_appendix(trade_insight)
-                        existing_summary = domain_reports["finance"].get("summary", "")
-                        domain_reports["finance"]["summary"] = f"{existing_summary} {trade_summary}"
-                    
-                    # Add trade opportunity
-                    opportunity = build_trade_opportunity(trade_insight)
-                    if opportunity:
-                        domain_reports["finance"].setdefault("trade_opportunities", []).append(opportunity)
-                    
-                    # Add trade risk
-                    risk = build_trade_risk(trade_insight)
-                    if risk:
-                        domain_reports["finance"].setdefault("trade_risks", []).append(risk)
-                    
-                    # Add trade action
-                    action = build_trade_action(trade_insight)
-                    if action:
-                        domain_reports["finance"].setdefault("trade_actions", []).append(action)
-                        
-            except Exception as e:
-                # Graceful degradation - log warning but continue
-                import logging
-                logging.getLogger(__name__).warning(f"Trade intelligence unavailable: {e}")
-        
+            domain_reports, tactical_trade_insights = self._apply_trade_intelligence(domain_reports)
+        else:
+            tactical_trade_insights = []
+
         # Generate brief with trade intelligence
         brief = self.brief_generator.generate(
             domain_reports, 
@@ -320,6 +269,78 @@ class PSIP:
         )
         
         return brief
+    
+    def _refresh_domain_analyses(self) -> None:
+        """Analyze all domains to process signals into strategies"""
+        for domain_key in self.domains.keys():
+            self.analyze_domain(domain_key)
+    
+    def _collect_domain_reports(self) -> dict:
+        """Collect reports from all domain chiefs"""
+        reports = {}
+        for domain_key, chief in self.domains.items():
+            report = chief.create_report()
+            reports[domain_key] = {
+                "summary": f"{domain_key.capitalize()}: {chief.get_domain_status()}",
+                "recommendations": [r for r in report.recommendations],
+                "opportunities": chief.get_active_strategies(),
+                "risks": []
+            }
+        return reports
+    
+    def _build_strategy_status(self) -> dict:
+        """Build strategy status from all active strategies"""
+        active_strategies = []
+        for chief in self.domains.values():
+            active_strategies.extend(chief.get_active_strategies())
+        
+        return {
+            "active_strategies": [{"id": s.id, "title": s.title} for s in active_strategies]
+        }
+    
+    def _build_risk_summary(self) -> dict:
+        """Get risk summary from risk governor"""
+        return self.risk_governor.get_risk_summary()
+    
+    def _apply_trade_intelligence(self, domain_reports: dict) -> tuple[dict, list]:
+        """Apply trade intelligence to domain reports
+        
+        Returns:
+            Tuple of (updated domain_reports, tactical_trade_insights)
+        """
+        tactical_trade_insights = []
+        
+        try:
+            trade_insight = get_latest_spy0dte_trade_insight()
+            if trade_insight:
+                tactical_trade_insights = [trade_insight.to_dict()]
+                
+                # Enrich finance domain summary with trade intelligence
+                if "finance" in domain_reports:
+                    trade_summary = build_finance_trade_summary_appendix(trade_insight)
+                    existing_summary = domain_reports["finance"].get("summary", "")
+                    domain_reports["finance"]["summary"] = f"{existing_summary} {trade_summary}"
+                
+                # Add trade opportunity
+                opportunity = build_trade_opportunity(trade_insight)
+                if opportunity:
+                    domain_reports["finance"].setdefault("trade_opportunities", []).append(opportunity)
+                
+                # Add trade risk
+                risk = build_trade_risk(trade_insight)
+                if risk:
+                    domain_reports["finance"].setdefault("trade_risks", []).append(risk)
+                
+                # Add trade action
+                action = build_trade_action(trade_insight)
+                if action:
+                    domain_reports["finance"].setdefault("trade_actions", []).append(action)
+                    
+        except Exception as e:
+            # Graceful degradation - log warning but continue
+            logger.warning("Trade intelligence unavailable: %s", e)
+        
+        return domain_reports, tactical_trade_insights
     
     def get_system_status(self) -> dict:
         """Get overall system status"""
@@ -374,10 +395,8 @@ class PSIP:
             "duration_ms": result.duration_ms
         }
     
-    def get_ingested_signals(self, domain: str = None, limit: int = 100) -> list:
+    def get_ingested_signals(self, domain: str | None = None, limit: int = 100) -> list[dict]:
         """Get signals from the ingestion cache"""
-        from infrastructure.signal_ingestion import SignalDomain
-        
         if domain:
             try:
                 sig_domain = SignalDomain(domain)
@@ -463,9 +482,9 @@ class PSIP:
             risk_clusters = self.graph_query.get_risk_clusters()
             return {"risk_clusters": [rc.to_dict() for rc in risk_clusters]}
         elif query_type == "domain_health":
-            from .infrastructure.life_graph.graph_models import Domain
-            domain = kwargs.get("domain", "finance")
-            return self.graph_query.get_domain_health(Domain(domain))
+            # Use the already imported Domain from infrastructure.life_graph
+            domain_key = kwargs.get("domain", "finance")
+            return self.graph_query.get_domain_health(Domain(domain_key))
         elif query_type == "influence":
             return self.graph_query.get_cross_domain_influence()
         else:
@@ -499,68 +518,129 @@ class PSIP:
         return result.to_dict()
 
 
+# ============== Domain Configuration ==============
+
+from enum import StrEnum
+
+
+class DomainName(StrEnum):
+    """Centralized domain names to avoid stringly-typed errors"""
+    FINANCE = "finance"
+    HEALTH = "health"
+    CAREER = "career"
+    RELATIONSHIPS = "relationships"
+    INTELLIGENCE = "intelligence"
+    LIFE_ARCHITECTURE = "life_architecture"
+
+
+# Domain configuration centralized for governance setup
+DOMAIN_CONFIG: dict[str, dict] = {
+    DomainName.FINANCE: {
+        "chief_cls": domain.ChiefFinancialOfficer,
+        "member_id": "cfo",
+        "short_name": "CFO",
+        "title": "Chief Financial Officer",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+    DomainName.HEALTH: {
+        "chief_cls": domain.ChiefHealthOfficer,
+        "member_id": "cho",
+        "short_name": "CHO",
+        "title": "Chief Health Officer",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+    DomainName.CAREER: {
+        "chief_cls": domain.ChiefCareerOfficer,
+        "member_id": "cco",
+        "short_name": "CCO",
+        "title": "Chief Career Officer",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+    DomainName.RELATIONSHIPS: {
+        "chief_cls": domain.ChiefRelationshipOfficer,
+        "member_id": "cro",
+        "short_name": "CRO",
+        "title": "Chief Relationship Officer",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+    DomainName.INTELLIGENCE: {
+        "chief_cls": domain.ChiefIntelligenceOfficer,
+        "member_id": "cio",
+        "short_name": "CIO",
+        "title": "Chief Intelligence Officer",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+    DomainName.LIFE_ARCHITECTURE: {
+        "chief_cls": domain.ChiefLifeArchitect,
+        "member_id": "cla",
+        "short_name": "CLA",
+        "title": "Chief Life Architect",
+        "weight": 1.0,
+        "priority": 5,
+        "risk_thresholds": (0.7, 0.5, 0.6),
+    },
+}
+
+
+def create_psip(
+    total_capital: float = 100000,
+    domains: dict[str, domain.ChiefOfficer] | None = None,
+    signal_system: infra.SignalSystem | None = None,
+    memory: infra.MemoryEngine | None = None,
+    executive_council: governance.ExecutiveCouncil | None = None,
+    risk_governor: governance.RiskGovernor | None = None,
+    brief_generator: outputs.ExecutiveBriefGenerator | None = None,
+    intelligence_cycle: IntelligenceCycleManager | None = None,
+) -> PSIP:
+    """
+    Factory function to create a PSIP instance with proper dependency injection.
+    
+    This separates composition from behavior, making PSIP easier to test and evolve.
+    
+    Args:
+        total_capital: Initial capital for the capital deployment coordinator
+        domains: Optional dict of domain chief officers (injected for testing)
+        signal_system: Optional signal system (injected for testing)
+        memory: Optional memory engine (injected for testing)
+        executive_council: Optional executive council (injected for testing)
+        risk_governor: Optional risk governor (injected for testing)
+        brief_generator: Optional brief generator (injected for testing)
+        intelligence_cycle: Optional intelligence cycle manager (injected for testing)
+    
+    Returns:
+        Configured PSIP instance
+    """
+    return PSIP(
+        total_capital=total_capital,
+        domains=domains,
+        signal_system=signal_system,
+        memory=memory,
+        executive_council=executive_council,
+        risk_governor=risk_governor,
+        brief_generator=brief_generator,
+        intelligence_cycle=intelligence_cycle,
+    )
+
+
 __all__ = [
+    # Public API
     "PSIP",
+    "create_psip",
     
-    # Layer 1 exports
-    "StrategyLab", "StrategicHypothesis",
-    "SimulationEngine", "SimulationResult",
-    "EdgeDiscoveryEngine", "Edge",
-    "KnowledgeGraph", "Node", "Relationship",
-    "LearningEngine", "Lesson", "DecisionRecord",
-    "ScenarioPlanner", "Scenario", "ScenarioType", "Timeframe",
-    "SignalFusionEngine", "Signal", "FusedSignal",
+    # Domain enum and config
+    "DomainName",
+    "DOMAIN_CONFIG",
     
-    # Layer 2 exports
-    "ExecutiveCouncil", "CouncilMember", "CouncilDecision", "DecisionPriority", "DecisionStatus",
-    "RiskGovernor", "Risk", "RiskThreshold", "RiskLevel", "RiskStatus",
-    "ExecutionGateManager", "ExecutionGate", "GatePolicy", "GateStatus", "GateStep",
-    "CapitalDeploymentCoordinator", "CapitalAllocation", "CapitalBudget", "AllocationStatus",
-    "PriorityRouter", "Task", "Priority", "TaskStatus",
-    
-    # Layer 3 exports
-    "ChiefOfficer", "DomainSignal", "DomainStrategy", "DomainReport",
-    "ChiefFinancialOfficer",
-    "ChiefHealthOfficer",
-    "ChiefCareerOfficer",
-    "ChiefRelationshipOfficer",
-    "ChiefIntelligenceOfficer",
-    "ChiefLifeArchitect",
-    
-    # Infrastructure exports
-    "MemoryEngine", "MemoryEntry",
-    "SignalSystem", "Signal", "SignalRoute", "SignalPriority", "SignalStatus",
-    
-    # BB-INF-007: Signal Ingestion exports
-    "SignalIngestionManager", "IngestionResult", "IngestionStatus",
-    "SignalConnectorRegistry", "ConnectorConfig", "ConnectorCategory",
-    "SignalNormalizer", "CanonicalSignal", "SignalDomain",
-    "SignalValidator", "ValidationResult",
-    "SignalCache", "get_signal_cache",
-    "SignalHealthMonitor", "HealthStatus", "get_health_monitor",
-    "get_ingestion_manager",
-    
-    # BB-INF-007: Intelligence Cycle exports
-    "IntelligenceCycleManager", "IntelligenceCycleResult",
-    "CycleScheduler", "CycleSchedule", "CycleExecution", "CycleFrequency",
-    "SignalRefreshEngine", "RefreshResult",
-    "StrategyTriggerEngine", "TriggerResult",
-    "CouncilTriggerEngine", "CouncilTriggerResult",
-    "ReportingTriggerEngine", "ReportTriggerResult",
-    "get_intelligence_cycle_manager",
-    
-    # BB-INF-008: Life Graph exports
-    "LifeSignalGraph", "get_life_graph",
-    "GraphNode", "GraphEdge", "NodeType", "Domain", "InfluenceType",
-    "RelationshipEngine", "get_relationship_engine",
-    "GraphBuilder", "get_graph_builder",
-    "GraphQueryEngine", "get_graph_query_engine",
-    
-    # BB-INF-008: Digital Twin exports
-    "DigitalTwinModel", "get_digital_twin",
-    "LeverageDiscoveryEngine", "get_leverage_discovery_engine",
-    "LeverageOpportunity", "LeverageResult",
-    
-    # Outputs exports
-    "ExecutiveBriefGenerator", "ExecutiveBrief",
+    # Trade intelligence availability flag
+    "TRADE_INTELLIGENCE_AVAILABLE",
 ]
