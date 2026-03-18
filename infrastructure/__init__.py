@@ -5,6 +5,46 @@ Infrastructure Layer
 from .memory_engine.memory_engine import MemoryEngine, MemoryEntry
 from .signal_system.signal_system import SignalSystem, Signal, SignalRoute, SignalPriority, SignalStatus
 
+# Isolation Architecture - BB-ARCH-ISO-001
+from .isolation import (
+    # Layer 1: Cognitive Isolation
+    AgentSandbox,
+    AgentSandboxRegistry,
+    AgentContext,
+    AgentOutput,
+    AgentDomain,
+    get_agent_registry,
+    
+    # Layer 2: Data & Memory Isolation
+    MemoryScopeManager,
+    MemoryScope,
+    get_memory_manager,
+    
+    # Layer 3: Tool & Permission Isolation
+    PermissionRegistry,
+    ToolGatekeeper,
+    ToolRiskLevel,
+    get_tool_gatekeeper,
+    
+    # Layer 4: Runtime Execution Isolation
+    RuntimeIsolator,
+    EngineConfig,
+    EngineType,
+    get_runtime_isolator,
+    
+    # Layer 5: Risk & Action Isolation
+    ExecutionGate,
+    ActionRequest,
+    ActionRiskLevel,
+    ActionCategory,
+    get_execution_gate,
+    
+    # Shared Intelligence Fabric
+    SharedIntelligenceFabric,
+    EventType,
+    get_shared_intelligence_fabric,
+)
+
 
 __all__ = [
     # Memory Engine
@@ -17,4 +57,31 @@ __all__ = [
     "SignalRoute",
     "SignalPriority",
     "SignalStatus",
+    
+    # Isolation Architecture
+    "AgentSandbox",
+    "AgentSandboxRegistry",
+    "AgentContext",
+    "AgentOutput",
+    "AgentDomain",
+    "get_agent_registry",
+    "MemoryScopeManager",
+    "MemoryScope",
+    "get_memory_manager",
+    "PermissionRegistry",
+    "ToolGatekeeper",
+    "ToolRiskLevel",
+    "get_tool_gatekeeper",
+    "RuntimeIsolator",
+    "EngineConfig",
+    "EngineType",
+    "get_runtime_isolator",
+    "ExecutionGate",
+    "ActionRequest",
+    "ActionRiskLevel",
+    "ActionCategory",
+    "get_execution_gate",
+    "SharedIntelligenceFabric",
+    "EventType",
+    "get_shared_intelligence_fabric",
 ]
