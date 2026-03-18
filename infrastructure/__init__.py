@@ -45,6 +45,37 @@ from .isolation import (
     get_shared_intelligence_fabric,
 )
 
+# Container Runtime Architecture - BB-ARCH-ISO-002
+from .runtime import (
+    # Agent Orchestrator
+    AgentOrchestrator,
+    SandboxRuntime,
+    DevelopmentSandbox,
+    AgentConfig,
+    AgentContainer,
+    AgentHealth,
+    AgentStatus,
+    RuntimeMode,
+    get_agent_orchestrator,
+    
+    # Capability Token Service
+    CapabilityTokenService,
+    CapabilityRegistry,
+    Capability,
+    CapabilityToken,
+    CapabilityScope,
+    get_capability_token_service,
+    
+    # Resource Governor
+    ResourceGovernor,
+    ResourceLimit,
+    ResourceType,
+    AgentResources,
+    ExecutionTimer,
+    ResourceLimitExceeded,
+    get_resource_governor,
+)
+
 
 __all__ = [
     # Memory Engine
@@ -58,7 +89,7 @@ __all__ = [
     "SignalPriority",
     "SignalStatus",
     
-    # Isolation Architecture
+    # Isolation Architecture - BB-ARCH-ISO-001
     "AgentSandbox",
     "AgentSandboxRegistry",
     "AgentContext",
@@ -84,4 +115,28 @@ __all__ = [
     "SharedIntelligenceFabric",
     "EventType",
     "get_shared_intelligence_fabric",
+    
+    # Container Runtime Architecture - BB-ARCH-ISO-002
+    "AgentOrchestrator",
+    "SandboxRuntime",
+    "DevelopmentSandbox",
+    "AgentConfig",
+    "AgentContainer",
+    "AgentHealth",
+    "AgentStatus",
+    "RuntimeMode",
+    "get_agent_orchestrator",
+    "CapabilityTokenService",
+    "CapabilityRegistry",
+    "Capability",
+    "CapabilityToken",
+    "CapabilityScope",
+    "get_capability_token_service",
+    "ResourceGovernor",
+    "ResourceLimit",
+    "ResourceType",
+    "AgentResources",
+    "ExecutionTimer",
+    "ResourceLimitExceeded",
+    "get_resource_governor",
 ]
