@@ -14,6 +14,8 @@ This is the main entry point for the PSIP system.
 """
 
 import logging
+from enum import StrEnum
+from typing import Any
 
 # Module logger
 logger = logging.getLogger(__name__)
@@ -88,7 +90,7 @@ class PSIP:
         self,
         total_capital: float = 100000,
         # Optional injected dependencies for testing
-        domains: dict | None = None,
+        domains: dict[str, domain.ChiefOfficer] | None = None,
         signal_system: infra.SignalSystem | None = None,
         memory: infra.MemoryEngine | None = None,
         executive_council: governance.ExecutiveCouncil | None = None,
@@ -112,15 +114,15 @@ class PSIP:
         self.capital_coordinator = governance.CapitalDeploymentCoordinator(total_capital)
         self.priority_router = governance.PriorityRouter()
         
-        # Layer 3: Domain Intelligence (use injected or create new)
-        self.domains = domains or {
-            "finance": domain.ChiefFinancialOfficer(),
-            "health": domain.ChiefHealthOfficer(),
-            "career": domain.ChiefCareerOfficer(),
-            "relationships": domain.ChiefRelationshipOfficer(),
-            "intelligence": domain.ChiefIntelligenceOfficer(),
-            "life_architecture": domain.ChiefLifeArchitect()
-        }
+        # Layer 3: Domain Intelligence (use injected or build from DOMAIN_CONFIG)
+        if domains is not None:
+            self.domains = domains
+        else:
+            # Build domains from centralized DOMAIN_CONFIG
+            self.domains = {
+                domain_name.value: config["chief_cls"]()
+                for domain_name, config in DOMAIN_CONFIG.items()
+            }
         
         # Infrastructure (use injected or create new)
         self.memory = memory or infra.MemoryEngine()
@@ -147,28 +149,31 @@ class PSIP:
         # Outputs
         self.brief_generator = brief_generator or outputs.ExecutiveBriefGenerator()
         
-        # Initialize governance
+        # Initialize governance from DOMAIN_CONFIG
         self._initialize_governance()
     
-    def _initialize_governance(self):
-        """Initialize governance layer"""
-        # Add council members
-        self.executive_council.add_member("cfo", "CFO", "Chief Financial Officer", "finance", 1.0)
-        self.executive_council.add_member("cho", "CHO", "Chief Health Officer", "health", 1.0)
-        self.executive_council.add_member("cco", "CCO", "Chief Career Officer", "career", 1.0)
-        self.executive_council.add_member("cro", "CRO", "Chief Relationship Officer", "relationships", 1.0)
-        self.executive_council.add_member("cio", "CIO", "Chief Intelligence Officer", "intelligence", 1.0)
-        self.executive_council.add_member("cla", "CLA", "Chief Life Architect", "life_architecture", 1.0)
-        
-        # Add risk thresholds
-        for domain in self.domains.keys():
-            self.risk_governor.add_threshold(domain, 0.7, 0.5, 0.6)
-        
-        # Add domain priorities
-        for domain in self.domains.keys():
-            self.priority_router.add_domain_priority(domain, 5)
+    def _initialize_governance(self) -> None:
+        """Initialize governance layer from DOMAIN_CONFIG"""
+        # Add council members and risk thresholds from centralized config
+        for domain_name, config in DOMAIN_CONFIG.items():
+            domain_key = domain_name.value
+            
+            self.executive_council.add_member(
+                config["member_id"],
+                config["short_name"],
+                config["title"],
+                domain_key,
+                config["weight"],
+            )
+            
+            # Add risk thresholds
+            high, medium, low = config["risk_thresholds"]
+            self.risk_governor.add_threshold(domain_key, high, medium, low)
+            
+            # Add domain priority
+            self.priority_router.add_domain_priority(domain_key, config["priority"])
     
-    def process_signal(self, signal_data: dict) -> infra.Signal:
+    def process_signal(self, signal_data: dict[str, Any]) -> infra.Signal:
         """Process an incoming signal through the full pipeline"""
         # 1. Emit signal
         signal = self.signal_system.emit(
@@ -195,7 +200,7 @@ class PSIP:
         
         return signal
     
-    def analyze_domain(self, domain: str) -> dict:
+    def analyze_domain(self, domain: str) -> dict[str, Any]:
         """Analyze a specific domain"""
         if domain not in self.domains:
             return {"error": "Domain not found"}
@@ -395,7 +400,7 @@ class PSIP:
             "duration_ms": result.duration_ms
         }
     
-    def get_ingested_signals(self, domain: str | None = None, limit: int = 100) -> list[dict]:
+    def get_ingested_signals(self, domain: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
         """Get signals from the ingestion cache"""
         if domain:
             try:
@@ -456,9 +461,9 @@ class PSIP:
     
     # ============== BB-INF-008: Life Signal Graph Methods ==============
     
-    def build_life_graph(self, signals: list = None) -> dict:
+    def build_life_graph(self, signals: list[dict[str, Any]] | None = None) -> dict[str, Any]:
         """Build the life signal graph from signals"""
-        if signals:
+        if signals is not None:
             result = self.graph_builder.build_from_signals(signals)
         else:
             result = self.graph_builder.full_build()
@@ -469,11 +474,11 @@ class PSIP:
             "graph_summary": self.life_graph.get_graph_summary()
         }
     
-    def get_life_graph_summary(self) -> dict:
+    def get_life_graph_summary(self) -> dict[str, Any]:
         """Get summary of the life signal graph"""
         return self.life_graph.get_graph_summary()
     
-    def query_life_graph(self, query_type: str, **kwargs) -> dict:
+    def query_life_graph(self, query_type: str, **kwargs: Any) -> dict[str, Any]:
         """Query the life graph"""
         if query_type == "leverage":
             leverage_points = self.graph_query.get_high_leverage_nodes(**kwargs)
@@ -520,8 +525,6 @@ class PSIP:
 
 # ============== Domain Configuration ==============
 
-from enum import StrEnum
-
 
 class DomainName(StrEnum):
     """Centralized domain names to avoid stringly-typed errors"""
@@ -534,7 +537,7 @@ class DomainName(StrEnum):
 
 
 # Domain configuration centralized for governance setup
-DOMAIN_CONFIG: dict[str, dict] = {
+DOMAIN_CONFIG: dict[DomainName, dict[str, Any]] = {
     DomainName.FINANCE: {
         "chief_cls": domain.ChiefFinancialOfficer,
         "member_id": "cfo",
