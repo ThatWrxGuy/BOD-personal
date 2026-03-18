@@ -120,7 +120,7 @@ class PSIP:
         else:
             # Build domains from centralized DOMAIN_CONFIG
             self.domains = {
-                domain_name.value: config["chief_cls"]()
+                domain_name.value: config.chief_class()
                 for domain_name, config in DOMAIN_CONFIG.items()
             }
         
@@ -158,20 +158,26 @@ class PSIP:
         for domain_name, config in DOMAIN_CONFIG.items():
             domain_key = domain_name.value
             
+            # Use derived properties from DomainConfig
             self.executive_council.add_member(
-                config["member_id"],
-                config["short_name"],
-                config["title"],
+                config.member_id,
+                config.short_name,
+                config.title,
                 domain_key,
-                config["weight"],
+                config.governance.priority_weight,
             )
             
-            # Add risk thresholds
-            high, medium, low = config["risk_thresholds"]
-            self.risk_governor.add_threshold(domain_key, high, medium, low)
+            # Add risk thresholds from governance config
+            thresholds = config.governance
+            self.risk_governor.add_threshold(
+                domain_key, 
+                thresholds.risk_threshold_high, 
+                thresholds.risk_threshold_medium, 
+                thresholds.risk_threshold_low
+            )
             
-            # Add domain priority
-            self.priority_router.add_domain_priority(domain_key, config["priority"])
+            # Add domain priority (using fixed priority for now)
+            self.priority_router.add_domain_priority(domain_key, 5)
     
     def process_signal(self, signal_data: dict[str, Any]) -> infra.Signal:
         """Process an incoming signal through the full pipeline"""
@@ -536,62 +542,79 @@ class DomainName(StrEnum):
     LIFE_ARCHITECTURE = "life_architecture"
 
 
+# Import config models
+from psip_config import DomainConfig, GovernanceConfig, RoleConfig, validate_domain_config
+
+
 # Domain configuration centralized for governance setup
-DOMAIN_CONFIG: dict[DomainName, dict[str, Any]] = {
-    DomainName.FINANCE: {
-        "chief_cls": domain.ChiefFinancialOfficer,
-        "member_id": "cfo",
-        "short_name": "CFO",
-        "title": "Chief Financial Officer",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
-    DomainName.HEALTH: {
-        "chief_cls": domain.ChiefHealthOfficer,
-        "member_id": "cho",
-        "short_name": "CHO",
-        "title": "Chief Health Officer",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
-    DomainName.CAREER: {
-        "chief_cls": domain.ChiefCareerOfficer,
-        "member_id": "cco",
-        "short_name": "CCO",
-        "title": "Chief Career Officer",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
-    DomainName.RELATIONSHIPS: {
-        "chief_cls": domain.ChiefRelationshipOfficer,
-        "member_id": "cro",
-        "short_name": "CRO",
-        "title": "Chief Relationship Officer",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
-    DomainName.INTELLIGENCE: {
-        "chief_cls": domain.ChiefIntelligenceOfficer,
-        "member_id": "cio",
-        "short_name": "CIO",
-        "title": "Chief Intelligence Officer",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
-    DomainName.LIFE_ARCHITECTURE: {
-        "chief_cls": domain.ChiefLifeArchitect,
-        "member_id": "cla",
-        "short_name": "CLA",
-        "title": "Chief Life Architect",
-        "weight": 1.0,
-        "priority": 5,
-        "risk_thresholds": (0.7, 0.5, 0.6),
-    },
+# Using typed DomainConfig dataclasses for immutability and type safety
+DOMAIN_CONFIG: dict[DomainName, DomainConfig] = {
+    DomainName.FINANCE: DomainConfig(
+        name="finance",
+        chief_class=domain.ChiefFinancialOfficer,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Financial intelligence and strategic capital allocation domain.",
+    ),
+    DomainName.HEALTH: DomainConfig(
+        name="health",
+        chief_class=domain.ChiefHealthOfficer,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Health and wellness intelligence domain.",
+    ),
+    DomainName.CAREER: DomainConfig(
+        name="career",
+        chief_class=domain.ChiefCareerOfficer,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Career development and professional growth domain.",
+    ),
+    DomainName.RELATIONSHIPS: DomainConfig(
+        name="relationships",
+        chief_class=domain.ChiefRelationshipOfficer,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Relationship intelligence and social dynamics domain.",
+    ),
+    DomainName.INTELLIGENCE: DomainConfig(
+        name="intelligence",
+        chief_class=domain.ChiefIntelligenceOfficer,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Knowledge management and strategic intelligence domain.",
+    ),
+    DomainName.LIFE_ARCHITECTURE: DomainConfig(
+        name="life_architecture",
+        chief_class=domain.ChiefLifeArchitect,
+        governance=GovernanceConfig(
+            priority_weight=1.0,
+            risk_threshold_high=0.7,
+            risk_threshold_medium=0.5,
+            risk_threshold_low=0.6,
+        ),
+        description="Life design and lifestyle optimization domain.",
+    ),
 }
 
 
@@ -643,6 +666,12 @@ __all__ = [
     # Domain enum and config
     "DomainName",
     "DOMAIN_CONFIG",
+    
+    # Config models (from psip_config)
+    "DomainConfig",
+    "GovernanceConfig",
+    "RoleConfig",
+    "validate_domain_config",
     
     # Trade intelligence availability flag
     "TRADE_INTELLIGENCE_AVAILABLE",
